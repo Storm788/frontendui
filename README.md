@@ -3,9 +3,9 @@
 Frontend library :)
 
 Based on React, developed with vite stack.
-###### Deníček
+# Deníček
 
 ### **První commit:**
 Dne 3.4.2025 První vypsaní na stránku -> Hello World!
-# Problémy:
+#### Problémy:
 Pochopení programu/zadání
