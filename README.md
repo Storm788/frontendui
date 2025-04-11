@@ -5,12 +5,11 @@ Frontend library :)
 Based on React, developed with vite stack.
 # Deníček
 
-## Zadání:
-
-### Zobrazení zkoušky (v termínu u semestru / předmětu) 
-Seznam zkoušených 
-Podmínky zkoušek a jejich částí 
-Zápis výsledků (výkonů) souhrnná hodnocení 
+### Zadání:
+Zobrazení zkoušky (v termínu u semestru / předmětu) 
+  Seznam zkoušených 
+  Podmínky zkoušek a jejich částí 
+  Zápis výsledků (výkonů) souhrnná hodnocení 
 
 
 ### **První commit:**
