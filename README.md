@@ -7,9 +7,9 @@ Based on React, developed with vite stack.
 
 ### Zadání:
 Zobrazení zkoušky (v termínu u semestru / předmětu) 
-  -Seznam zkoušených 
-  -Podmínky zkoušek a jejich částí 
-  -Zápis výsledků (výkonů) souhrnná hodnocení 
+Seznam zkoušených 
+Podmínky zkoušek a jejich částí 
+Zápis výsledků (výkonů) souhrnná hodnocení 
 
 
 ### **První commit:**
