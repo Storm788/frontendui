@@ -6,7 +6,7 @@ Based on React, developed with vite stack.
 # Deníček
 
 ### Zadání:
-Zobrazení zkoušky (v termínu u semestru / předmětu)/Seznam zkoušených/ Podmínky zkoušek a jejich část/ Zápis výsledků (výkonů) souhrnná hodnocení 
+Zobrazení zkoušky (v termínu u semestru / předmětu)/ Seznam zkoušených / Podmínky zkoušek a jejich část/ Zápis výsledků (výkonů) souhrnná hodnocení 
 
 
 ### **První commit:**
