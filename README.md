@@ -19,4 +19,4 @@ První kroky k pochopení fungování programu, zatím pracujeme spolu na jednom
 ### Druhý commit:
 Soon to be! Snad!
 #### Problémy:
-Nepodařilo se nám to nahrát na git.
+Nepodařilo se nám to nahrát na git. Bez dat v dabázi.
