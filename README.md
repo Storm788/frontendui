@@ -16,7 +16,7 @@ Pochopení programu/ujasnění si zadání, vyjasnit si jak postupovat, rozděle
 ##### Vyřešené problémy:
 První kroky k pochopení fungování programu, zatím pracujeme spolu na jednom počítači a pomáháme si navzájem
 
-Druhý commit:
+### Druhý commit:
 Soon to be! Snad!
-Problémy:
+#### Problémy:
 Nepodařilo se nám to nahrát na git.
