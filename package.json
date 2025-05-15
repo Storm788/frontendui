@@ -5,6 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "create:component": "node scripts/createcomponent.js",
+    "create:component2": "node scripts/createcomponent2.js",
     "create:scalar": "node scripts/createscalar.js",
     "create:vector": "node scripts/createvector.js",
     "build:apps": "npm workspaces foreach --include=apps/* npm run build",

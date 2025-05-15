@@ -3,7 +3,7 @@ import { useParams } from "react-router"
 
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
-import { UserButton, UserLargeCard } from "../Components"
+import { StateMachnineManagement, UserButton, UserData, UserLargeCard } from "../Components"
 import { UserReadAsyncAction } from "../Queries"
 import { UserPageNavbar } from "./UserPageNavbar"
 import { UserGroupsAttribute } from "../Vectors/UserGroupsAttribute"
@@ -35,6 +35,10 @@ const UserPageContent = ({user}) => {
             <UserGroupsAttribute user={user} />
 
             <UserButton operation="U" user={user} className="btn btn-primary">Upravit</UserButton>
+            <StateMachnineManagement user={user} />
+            <UserData user={user} />
+            <UserData user={user} />
+            
             <pre>{JSON.stringify(user, null, 2)}</pre> 
         </UserLargeCard>
     </>)
