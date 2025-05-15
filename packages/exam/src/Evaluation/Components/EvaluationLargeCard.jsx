@@ -32,10 +32,10 @@ export const EvaluationLargeCard = ({evaluation, children}) => {
         <EvaluationCardCapsule evaluation={evaluation} >
             <Row>
                 <LeftColumn>
-                    <EvaluationMediumCard evaluation={evaluation}/>
+                    Ahojky světe. <br/>
                 </LeftColumn>
                 <MiddleColumn>
-                    {children}
+                    <EvaluationMediumCard evaluation={evaluation}/>
                 </MiddleColumn>
             </Row>
         </EvaluationCardCapsule>

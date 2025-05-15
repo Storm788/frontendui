@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useParams } from "react-router"
 
-import { CreateDelayer, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
+import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
 import { EvaluationLargeCard } from "../Components"
 import { EvaluationReadAsyncAction } from "../Queries"
@@ -27,11 +27,19 @@ import { EvaluationPageNavbar } from "./EvaluationPageNavbar"
  * 
  * <EvaluationPageContent evaluation={evaluationEntity} />
  */
+export const placeholder_data = {
+        "id" : "8e157256-16c0-461b-a3f8-a5419cee2a5b",
+        "name": "Pepovo hodnocení zkoušky z brainrotu",
+        "description": "Hodina byla očividně příliš složitá nebo příliš brzo ráno.",
+        "grade": "F",
+        "passed": false,
+}
+
 const EvaluationPageContent = ({evaluation}) => {
     return (<>
-        <EvaluationPageNavbar evaluation={evaluation} />
-        <EvaluationLargeCard evaluation={evaluation}>
-            Evaluation {JSON.stringify(evaluation)}
+        <EvaluationPageNavbar evaluation={placeholder_data} />
+        <EvaluationLargeCard evaluation={placeholder_data}>
+            Evaluation {JSON.stringify(placeholder_data)}
         </EvaluationLargeCard>
     </>)
 }
@@ -77,7 +85,7 @@ const EvaluationPageContentLazy = ({evaluation}) => {
 
     return (<>
         {loading && <LoadingSpinner />}
-        {error && <ErrorEvent errors={error} />}
+        {error && <ErrorHandler errors={error} />}
         {entity && <EvaluationPageContent evaluation={entity}  onChange={handleChange} onBlur={handleBlur} />}
     </>)
 }
@@ -101,5 +109,6 @@ const EvaluationPageContentLazy = ({evaluation}) => {
 export const EvaluationPage = () => {
     const {id} = useParams()
     const evaluation = {id}
-    return <EvaluationPageContentLazy evaluation={evaluation} />
+
+    return <EvaluationPageContent evaluation={placeholder_data} />
 }

@@ -24,9 +24,10 @@
 export const EvaluationMediumContent = ({evaluation, children}) => {
     return (
         <>
-            EvaluationMediumContent <br />
-            {JSON.stringify(evaluation)}
-            {children}
+        ID: {evaluation.id} <br/>
+        description: {evaluation.description} <br/>
+        grade: {evaluation.grade} <br/>
+        passed: False <br/>
         </>
     )
 }

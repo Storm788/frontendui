@@ -2,11 +2,20 @@ import {
       createBrowserRouter,
       RouterProvider
 } from "react-router-dom";
-  
-import { UserRouterSegment } from "@hrbolek/uoisfrontend-ug2";
+import { ExamPage, ExamRouterSegment} from "../../../packages/exam/src";
+import { EvaluationPage, EvaluationRouterSegment } from "C:/Users/kryst/source/repos/stefek1/frontendui/packages/exam/src/Evaluation";
 
 export const Routes = [
-    UserRouterSegment
+    {
+        path: `/zk/:id`,
+        element: <ExamPage />,
+    },
+    {
+        path: `/pepa/:id`,
+        element: <EvaluationPage/>
+    },
+    ExamRouterSegment,
+    EvaluationRouterSegment
 ]
 
 // const router = createBrowserRouter(Routes, {basename: "/ug"});

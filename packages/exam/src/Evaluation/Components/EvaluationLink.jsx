@@ -1,6 +1,6 @@
 import { ProxyLink } from "@hrbolek/uoisfrontend-shared"
 
-export const EvaluationURI = '/evaluation/evaluation/view/';
+export const EvaluationURI = '/evaluation/';
 
 /**
  * A React component that renders a `ProxyLink` to an "evaluation" entity's view page.
