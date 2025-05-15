@@ -20,6 +20,6 @@ Pochopení programu/ujasnění si zadání, vyjasnit si jak postupovat, rozděle
 První kroky k pochopení fungování programu, zatím pracujeme spolu na jednom počítači a pomáháme si navzájem
 
 ### Druhý commit:
-Soon to be! Snad!
+Soon to be! Snad! Update 15.5.2025 se mi podarilo vyresit proble s commitovanim
 #### Problémy:
 Nepodařilo se nám to nahrát na git. Žádná data v dadbázi.
