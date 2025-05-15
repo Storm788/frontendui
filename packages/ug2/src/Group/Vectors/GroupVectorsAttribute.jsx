@@ -33,7 +33,7 @@ export const GroupVectorsAttribute = ({group}) => {
     return (
         <>
             {vectors.map(
-                vector => <div vector={item.id}>
+                vector => <div id={vector.id} key={vector.id}>
                     Probably {'<VectorMediumCard vector=\{vector\} />'} <br />
                     {JSON.stringify(vector)}
                 </div>
@@ -42,7 +42,7 @@ export const GroupVectorsAttribute = ({group}) => {
     )
 }
 
-const VectorsAttributeQuery = `
+const GroupVectorsAttributeQuery = `
 query GroupQueryRead($id: id, $where: VectorInputFilter, $skip: Int, $limit: Int) {
     result: groupById(id: $id) {
         __typename
@@ -55,8 +55,8 @@ query GroupQueryRead($id: id, $where: VectorInputFilter, $skip: Int, $limit: Int
 }
 `
 
-const VectorsAttributeAsyncAction = createAsyncGraphQLAction(
-    VectorsAttributeQuery,
+const GroupVectorsAttributeAsyncAction = createAsyncGraphQLAction(
+    GroupVectorsAttributeQuery,
     processVectorAttributeFromGraphQLResult("vectors")
 )
 
@@ -67,7 +67,7 @@ export const GroupVectorsAttributeInifite = ({group}) => {
         <InfiniteScroll 
             Visualiser={'VectorMediumCard'} 
             actionParams={{skip: 0, limit: 10}}
-            asyncAction={VectorsAttributeAsyncAction}
+            asyncAction={GroupVectorsAttributeAsyncAction}
         />
     )
 }

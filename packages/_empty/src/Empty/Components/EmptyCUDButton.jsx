@@ -1,8 +1,8 @@
 import { ButtonWithDialog, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared";
-// import { InsertEmptyButton } from "./CUDButtons/InsertEmptyButton";
-// import { UpdateEmptyButton } from "./CUDButtons/UpdateEmptyButton";
-// import { DeleteEmptyButton } from "./CUDButtons/DeleteEmptyButton";
+
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
+import { EmptyDeleteAsyncAction, EmptyInsertAsyncAction, EmptyUpdateAsyncAction } from "../Queries";
+import { EmptyMediumEditableContent } from "./EmptyMediumEditableContent";
 
 /**
  * EmptyCUDButton Component

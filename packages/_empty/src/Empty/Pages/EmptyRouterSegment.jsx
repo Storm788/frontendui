@@ -14,6 +14,6 @@ import { EmptyPage } from "./EmptyPage"
  * @property {JSX.Element} element - The React element (component) to render, in this case, <EmptyPage />.
  */
 export const EmptyRouterSegment = {
-    path: `/${EmptyURI}/:id`,
+    path: `/${EmptyURI}:id`,
     element: <EmptyPage />,
 }

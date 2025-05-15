@@ -33,7 +33,7 @@ export const EmptyVectorsAttribute = ({empty}) => {
     return (
         <>
             {vectors.map(
-                vector => <div vector={item.id}>
+                vector => <div id={vector.id} key={vector.id}>
                     Probably {'<VectorMediumCard vector=\{vector\} />'} <br />
                     {JSON.stringify(vector)}
                 </div>
@@ -42,7 +42,7 @@ export const EmptyVectorsAttribute = ({empty}) => {
     )
 }
 
-const VectorsAttributeQuery = `
+const EmptyVectorsAttributeQuery = `
 query EmptyQueryRead($id: id, $where: VectorInputFilter, $skip: Int, $limit: Int) {
     result: emptyById(id: $id) {
         __typename
@@ -55,19 +55,19 @@ query EmptyQueryRead($id: id, $where: VectorInputFilter, $skip: Int, $limit: Int
 }
 `
 
-const VectorsAttributeAsyncAction = createAsyncGraphQLAction(
-    VectorsAttributeQuery,
+const EmptyVectorsAttributeAsyncAction = createAsyncGraphQLAction(
+    EmptyVectorsAttributeQuery,
     processVectorAttributeFromGraphQLResult("vectors")
 )
 
-export const EmptyVectorsAttributeInifite = ({empty}) => { 
+export const EmptyVectorsAttributeInfinite = ({empty}) => { 
     const {vectors} = empty
 
     return (
         <InfiniteScroll 
             Visualiser={'VectorMediumCard'} 
             actionParams={{skip: 0, limit: 10}}
-            asyncAction={VectorsAttributeAsyncAction}
+            asyncAction={EmptyVectorsAttributeAsyncAction}
         />
     )
 }

@@ -23,6 +23,19 @@ export const GroupLargeFragment = createQueryStrLazy(
 `
 fragment GroupLarge on GroupGQLModel {
   ...GroupMedium
+  memberships(where: {valid: {_eq: true}}) {
+    __typename
+    id
+    valid
+    startdate
+    enddate
+    user {
+      id
+      name
+      surname
+      email
+    }
+  }
 }
 `, GroupMediumFragment)
   

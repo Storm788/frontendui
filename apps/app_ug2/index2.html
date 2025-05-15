@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <title>GraphQL Introspection → OpenAPI YAML Converter</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js" crossorigin="anonymous"></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    pre { background: #f4f4f4; padding: 10px; overflow: auto; }
+  </style>
+</head>
+<body>
+  <h1>GraphQL Introspection → OpenAPI YAML Converter</h1>
+  
+  <h2>Výstup (OpenAPI YAML)</h2>
+  <pre id="outputYaml"></pre>
+  
+  <script>
+    const fetchURL = "/api/gql"; // pevně daný endpoint
+
+    const introspectionQuery = `
+query IntrospectionQuery {
+  __schema {
+    queryType { name }
+    mutationType { name }
+    types {
+      name
+      description
+      kind
+      fields {
+        name
+        description
+        args {
+          name
+          description
+          type {
+            kind
+            name
+            ofType {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                }
+              }
+            }
+          }
+        }
+        type {
+          kind
+          name
+          ofType {
+            kind
+            name
+            ofType {
+              kind
+              name
+              ofType {
+                kind
+                name
+              }
+            }
+          }
+        }
+      }
+      inputFields {
+        name
+        description
+        type {
+          kind
+          name
+          ofType {
+            kind
+            name
+            ofType {
+              kind
+              name
+            }
+          }
+        }
+      }
+      possibleTypes {
+        name
+        kind
+      }
+    }
+  }
+}
+`;
+
+    // Pomocné funkce
+    function getNamedType(typeRef) {
+      while (typeRef && typeRef.ofType) {
+        typeRef = typeRef.ofType;
+      }
+      return typeRef;
+    }
+    function isMandatory(typeRef) {
+      if (!typeRef) return false;
+      if (typeRef.kind === "NON_NULL") return true;
+      return typeRef.ofType ? isMandatory(typeRef.ofType) : false;
+    }
+    // Odvození jména entity ze jména resolveru (např. "admissionById" → "admissions")
+    function getEntityName(fieldName, suffix) {
+      const baseName = fieldName.slice(0, -suffix.length);
+      return baseName.toLowerCase() + "s";
+    }
+    // Sloučení endpointů pro stejnou entitu
+    function addOrMergeEndpoint(paths, path, method, endpointDef) {
+      if (!paths[path]) {
+        paths[path] = {};
+      }
+      paths[path][method] = endpointDef;
+    }
+
+    // Upravená funkce pro definici response schema s podporou union a list typů
+    function getResponseSchema(field, typesByName) {
+      let typeRef = field.type;
+      let isArray = false;
+      
+      // Odstranit NON_NULL obaly
+      while (typeRef && typeRef.kind === "NON_NULL") {
+        typeRef = typeRef.ofType;
+      }
+      // Zjistit, zda se jedná o list
+      if (typeRef && typeRef.kind === "LIST") {
+        isArray = true;
+        typeRef = typeRef.ofType;
+        while (typeRef && typeRef.kind === "NON_NULL") {
+          typeRef = typeRef.ofType;
+        }
+      }
+      
+      if (typeRef && typeRef.kind === "UNION") {
+        let possibleTypes = typeRef.possibleTypes;
+        if ((!possibleTypes || possibleTypes.length === 0) && typesByName && typesByName[typeRef.name]) {
+          possibleTypes = typesByName[typeRef.name].possibleTypes;
+        }
+        if (possibleTypes && possibleTypes.length > 0) {
+          const schema = {
+            oneOf: possibleTypes.map(pt => ({ $ref: `#/components/schemas/${pt.name}` }))
+          };
+          return isArray ? { type: "array", items: schema } : schema;
+        }
+      }
+      
+      const ref = { $ref: `#/components/schemas/${(typeRef && typeRef.name) ? typeRef.name : "object"}` };
+      return isArray ? { type: "array", items: ref } : ref;
+    }
+    
+    // Funkce pro generování requestBody schématu pro mutation nebo query z argumentů resolveru
+    function generateMutationRequestBodySchema(field, typesByName) {
+      const args = field.args || [];
+      if (args.length === 0) {
+        return { type: "object", properties: {} };
+      }
+      if (args.length === 1) {
+        const arg = args[0];
+        const named = getNamedType(arg.type);
+        if (named && named.kind === "INPUT_OBJECT") {
+          return { $ref: `#/components/schemas/${named.name}` };
+        }
+      }
+      const properties = {};
+      const required = [];
+      args.forEach(arg => {
+        const named = getNamedType(arg.type);
+        let propSchema;
+        if (named && named.kind === "INPUT_OBJECT") {
+          propSchema = { $ref: `#/components/schemas/${named.name}` };
+        } else if (named && named.kind === "SCALAR") {
+          const typeMap = { "UUID": "string", "DateTime": "string", "Int": "integer", "Boolean": "boolean", "String": "string" };
+          propSchema = { type: typeMap[named.name] || "string" };
+        } else {
+          propSchema = { type: "string" };
+        }
+        properties[arg.name] = propSchema;
+        if (isMandatory(arg.type)) {
+          required.push(arg.name);
+        }
+      });
+      const schema = { type: "object", properties: properties };
+      if (required.length > 0) {
+        schema.required = required;
+      }
+      return schema;
+    }
+
+    // Funkce pro generování endpointů pro listová pole specifická pro entity
+    // Pro každý ENTITY typ (kromě query a mutation typů) v indexu, projdeme jeho pole a pokud pole vrací list, vygenerujeme endpoint:
+    // /{entity}/{id}/{fieldName}
+    function generateListEndpoints(openAPISpec, typesByName, queryTypeName, mutationTypeName) {
+      Object.keys(typesByName).forEach(typeName => {
+        // Vyloučíme query a mutation typy
+        if (typeName === queryTypeName || typeName === mutationTypeName) return;
+        const type = typesByName[typeName];
+        if (type.kind === "OBJECT" && type.fields) {
+          const entityPath = `/${typeName.toLowerCase()}s`;
+          type.fields.forEach(field => {
+            let fieldType = field.type;
+            while (fieldType && fieldType.kind === "NON_NULL") {
+              fieldType = fieldType.ofType;
+            }
+            if (fieldType && fieldType.kind === "LIST") {
+              const listPath = `${entityPath}/{id}/${field.name.toLowerCase()}`;
+              const reqBodySchema = {
+                type: "object",
+                properties: {
+                  skip: { type: "integer", default: 0 },
+                  limit: { type: "integer", default: 20 },
+                  where: { type: "object" }
+                }
+              };
+              const endpointDef = {
+                summary: field.description || `Get list field ${field.name} for ${entityPath}`,
+                operationId: `${typeName.toLowerCase()}_${field.name.toLowerCase()}_list`,
+                parameters: [
+                  {
+                    name: "id",
+                    in: "path",
+                    required: true,
+                    schema: { type: "string", format: "uuid" },
+                    description: "Unique identifier of the entity"
+                  }
+                ],
+                requestBody: {
+                  description: "Pagination and filter parameters",
+                  required: true,
+                  content: {
+                    "application/json": {
+                      schema: reqBodySchema
+                    }
+                  }
+                },
+                responses: {
+                  "200": {
+                    description: "Successful response",
+                    content: {
+                      "application/json": {
+                        schema: { type: "array", items: getResponseSchema(field, typesByName) }
+                      }
+                    }
+                  }
+                }
+              };
+              addOrMergeEndpoint(openAPISpec.paths, listPath, "post", endpointDef);
+            }
+          });
+        }
+      });
+    }
+
+    // Funkce pro seřazení endpointů
+    function sortPaths(paths) {
+      const sortedPaths = {};
+      Object.keys(paths).sort().forEach(pathKey => {
+        const ops = paths[pathKey];
+        const sortedOps = {};
+        const verbOrder = ["get", "post", "put", "delete"];
+        verbOrder.forEach(verb => {
+          if (ops[verb]) sortedOps[verb] = ops[verb];
+        });
+        Object.keys(ops).sort().forEach(verb => {
+          if (!sortedOps[verb]) sortedOps[verb] = ops[verb];
+        });
+        sortedPaths[pathKey] = sortedOps;
+      });
+      return sortedPaths;
+    }
+
+    // Hlavní funkce pro vytvoření OpenAPI specifikace
+    function generateOpenAPISpec(introspection) {
+      const schema = introspection.data.__schema;
+      const queryTypeName = schema.queryType.name;
+      const mutationTypeName = schema.mutationType ? schema.mutationType.name : null;
+      const openAPISpec = {
+        openapi: "3.1.0",
+        info: {
+          title: "GraphQL API Converted to OpenAPI",
+          version: "1.0.0",
+          description: "Auto-generated OpenAPI spec from GraphQL introspection"
+        },
+        paths: {},
+        components: {
+          schemas: {}
+        }
+      };
+
+      // Vytvoření indexu typů podle jména – zabráníme duplicitnímu zpracování
+      const typesByName = {};
+      schema.types.forEach(type => {
+        if (!type.name.startsWith("__") && !typesByName[type.name]) {
+          typesByName[type.name] = type;
+        }
+      });
+
+      // --- Vytvoření komponent (schémat) z GraphQL typů ---
+      Object.keys(typesByName).forEach(typeName => {
+        const type = typesByName[typeName];
+        if (["OBJECT", "INPUT_OBJECT"].includes(type.kind)) {
+          const properties = {};
+          const required = [];
+          const fields = type.fields || type.inputFields;
+          if (fields) {
+            fields.forEach(field => {
+              const named = getNamedType(field.type);
+              let propDef = {};
+              if (named) {
+                if (named.kind === "SCALAR") {
+                  let fieldType;
+                  switch (named.name) {
+                    case "UUID":
+                      fieldType = "string";
+                      break;
+                    case "DateTime":
+                      fieldType = "string";
+                      break;
+                    case "Int":
+                      fieldType = "integer";
+                      break;
+                    case "Boolean":
+                      fieldType = "boolean";
+                      break;
+                    default:
+                      fieldType = "string";
+                  }
+                  propDef.type = fieldType;
+                } else {
+                  // Pro neskalární typy použijeme referenci
+                  propDef = { $ref: `#/components/schemas/${named.name}` };
+                }
+              } else {
+                propDef.type = "string";
+              }
+              if (field.description) {
+                if (propDef.$ref) {
+                  propDef = { allOf: [propDef], description: field.description };
+                } else {
+                  propDef.description = field.description;
+                }
+              }
+              properties[field.name] = propDef;
+              if (isMandatory(field.type)) {
+                required.push(field.name);
+              }
+            });
+          }
+          const schemaDef = { type: "object", properties: properties };
+          if (required.length > 0) {
+            schemaDef.required = required;
+          }
+          openAPISpec.components.schemas[type.name] = schemaDef;
+        }
+      });
+
+      // --- Mapování Query resolverů ---
+      const queryType = schema.types.find(type => type.name === queryTypeName && type.kind === "OBJECT");
+      if (queryType && queryType.fields) {
+        queryType.fields.forEach(field => {
+          const fname = field.name;
+          if (fname.endsWith("ById")) {
+            const entity = getEntityName(fname, "ById");
+            const path = `/${entity}/{id}`;
+            const endpointDef = {
+              summary: field.description || `Get single ${entity.slice(0, -1)}`,
+              operationId: fname,
+              parameters: [
+                {
+                  name: "id",
+                  in: "path",
+                  required: true,
+                  schema: { type: "string", format: "uuid" },
+                  description: "Unique identifier"
+                }
+              ],
+              responses: {
+                "200": {
+                  description: "Successful response",
+                  content: {
+                    "application/json": {
+                      schema: getResponseSchema(field, typesByName)
+                    }
+                  }
+                }
+              }
+            };
+            addOrMergeEndpoint(openAPISpec.paths, path, "get", endpointDef);
+          } else if (fname.endsWith("Page")) {
+            const entity = getEntityName(fname, "Page");
+            const path = `/${entity}/filter`;
+            const reqBodySchema = generateMutationRequestBodySchema(field, typesByName);
+            const endpointDef = {
+              summary: field.description || `Filter ${entity}`,
+              operationId: fname,
+              requestBody: {
+                description: "Filter criteria",
+                required: true,
+                content: {
+                  "application/json": {
+                    schema: reqBodySchema
+                  }
+                }
+              },
+              responses: {
+                "200": {
+                  description: "Successful response",
+                  content: {
+                    "application/json": {
+                      schema: { type: "array", items: getResponseSchema(field, typesByName) }
+                    }
+                  }
+                }
+              }
+            };
+            addOrMergeEndpoint(openAPISpec.paths, path, "post", endpointDef);
+          }
+        });
+      }
+
+      // --- Mapování Mutation resolverů ---
+      const mutationType = schema.types.find(type =>
+        schema.mutationType && type.name === schema.mutationType.name && type.kind === "OBJECT"
+      );
+      if (mutationType && mutationType.fields) {
+        mutationType.fields.forEach(field => {
+          const fname = field.name;
+          let entity, path, method, endpointDef;
+          if (fname.toLowerCase().includes("insert")) {
+            entity = getEntityName(fname, "Insert");
+            const inputTypeName = fname.replace(/Insert/i, "Input");
+            const reqBodySchema = generateMutationRequestBodySchema(field, typesByName);
+            const inputSchema = openAPISpec.components.schemas[inputTypeName];
+            if (inputSchema && inputSchema.properties && inputSchema.properties.id) {
+              // Variant: create with client provided id → POST /entities/{id}
+              path = `/${entity}/{id}`;
+              method = "post";
+              endpointDef = {
+                summary: field.description || `Create new ${entity.slice(0, -1)} (client-supplied id)`,
+                operationId: fname,
+                parameters: [
+                  {
+                    name: "id",
+                    in: "path",
+                    required: true,
+                    schema: { type: "string", format: "uuid" },
+                    description: "Unique identifier supplied by client"
+                  }
+                ],
+                requestBody: {
+                  description: "Input payload for insert (client provided id)",
+                  required: true,
+                  content: {
+                    "application/json": {
+                      schema: reqBodySchema
+                    }
+                  }
+                },
+                responses: {
+                  "200": {
+                    description: "Successful insertion",
+                    content: {
+                      "application/json": {
+                        schema: getResponseSchema(field, typesByName)
+                      }
+                    }
+                  }
+                }
+              };
+              addOrMergeEndpoint(openAPISpec.paths, path, method, endpointDef);
+            }
+            // Endpoint: create with backend generated id → POST /entities
+            path = `/${entity}`;
+            method = "post";
+            endpointDef = {
+              summary: field.description || `Create new ${entity.slice(0, -1)} (backend generated id)`,
+              operationId: fname,
+              requestBody: {
+                description: "Input payload for insert (backend generates id)",
+                required: true,
+                content: {
+                  "application/json": {
+                    schema: reqBodySchema
+                  }
+                }
+              },
+              responses: {
+                "200": {
+                  description: "Successful insertion",
+                  content: {
+                    "application/json": {
+                      schema: getResponseSchema(field, typesByName)
+                    }
+                  }
+                }
+              }
+            };
+            addOrMergeEndpoint(openAPISpec.paths, path, method, endpointDef);
+          } else if (fname.toLowerCase().includes("update")) {
+            entity = getEntityName(fname, "Update");
+            path = `/${entity}/{id}`;
+            method = "put";
+            const reqBodySchema = generateMutationRequestBodySchema(field, typesByName);
+            endpointDef = {
+              summary: field.description || `Update existing ${entity.slice(0, -1)}`,
+              operationId: fname,
+              parameters: [
+                {
+                  name: "id",
+                  in: "path",
+                  required: true,
+                  schema: { type: "string", format: "uuid" },
+                  description: "Unique identifier"
+                }
+              ],
+              requestBody: {
+                description: "Input payload for update",
+                required: true,
+                content: {
+                  "application/json": {
+                    schema: reqBodySchema
+                  }
+                }
+              },
+              responses: {
+                "200": {
+                  description: "Successful update",
+                  content: {
+                    "application/json": {
+                      schema: getResponseSchema(field, typesByName)
+                    }
+                  }
+                }
+              }
+            };
+            addOrMergeEndpoint(openAPISpec.paths, path, method, endpointDef);
+          } else if (fname.toLowerCase().includes("delete")) {
+            entity = getEntityName(fname, "Delete");
+            path = `/${entity}/{id}`;
+            method = "delete";
+            const reqBodySchema = generateMutationRequestBodySchema(field, typesByName);
+            endpointDef = {
+              summary: field.description || `Delete existing ${entity.slice(0, -1)}`,
+              operationId: fname,
+              parameters: [
+                {
+                  name: "id",
+                  in: "path",
+                  required: true,
+                  schema: { type: "string", format: "uuid" },
+                  description: "Unique identifier"
+                }
+              ],
+              requestBody: {
+                description: "Additional parameters (e.g., lastchange) for deletion",
+                required: false,
+                content: {
+                  "application/json": {
+                    schema: reqBodySchema
+                  }
+                }
+              },
+              responses: {
+                "200": {
+                  description: "Successful deletion",
+                  content: {
+                    "application/json": {
+                      schema: getResponseSchema(field, typesByName)
+                    }
+                  }
+                }
+              }
+            };
+            addOrMergeEndpoint(openAPISpec.paths, path, method, endpointDef);
+          }
+        });
+      }
+
+      // --- Generování endpointů pro listová pole u entit ---
+      // Pro každý ENTITY typ (kromě query a mutation typů) z indexu
+      Object.keys(typesByName).forEach(typeName => {
+        if (typeName === queryTypeName || typeName === mutationTypeName) return;
+        const type = typesByName[typeName];
+        if (type.kind === "OBJECT" && type.fields) {
+          const entityPath = `/${typeName.toLowerCase()}s`;
+          type.fields.forEach(field => {
+            let fieldType = field.type;
+            while (fieldType && fieldType.kind === "NON_NULL") {
+              fieldType = fieldType.ofType;
+            }
+            if (fieldType && fieldType.kind === "LIST") {
+              const listPath = `${entityPath}/{id}/${field.name.toLowerCase()}`;
+              const reqBodySchema = {
+                type: "object",
+                properties: {
+                  skip: { type: "integer", default: 0 },
+                  limit: { type: "integer", default: 20 },
+                  where: { type: "object" }
+                }
+              };
+              const endpointDef = {
+                summary: field.description || `Get list field ${field.name} for ${entityPath}`,
+                operationId: `${typeName.toLowerCase()}_${field.name.toLowerCase()}_list`,
+                parameters: [
+                  {
+                    name: "id",
+                    in: "path",
+                    required: true,
+                    schema: { type: "string", format: "uuid" },
+                    description: "Unique identifier of the entity"
+                  }
+                ],
+                requestBody: {
+                  description: "Pagination and filter parameters",
+                  required: true,
+                  content: {
+                    "application/json": {
+                      schema: reqBodySchema
+                    }
+                  }
+                },
+                responses: {
+                  "200": {
+                    description: "Successful response",
+                    content: {
+                      "application/json": {
+                        schema: { type: "array", items: getResponseSchema(field, typesByName) }
+                      }
+                    }
+                  }
+                }
+              };
+              addOrMergeEndpoint(openAPISpec.paths, listPath, "post", endpointDef);
+            }
+          });
+        }
+      });
+
+      // Seřazení paths podle klíčů a metod (get, post, put, delete)
+      openAPISpec.paths = sortPaths(openAPISpec.paths);
+      
+      return openAPISpec;
+    }
+
+    // Hlavní funkce pro načtení introspekce a generování YAML
+    function runIt() {
+      fetch(fetchURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: introspectionQuery })
+      })
+      .then(response => {
+        if (!response.ok) throw new Error('Network error: ' + response.statusText);
+        return response.json();
+      })
+      .then(data => {
+        const openAPISpec = generateOpenAPISpec(data);
+        const yamlStr = jsyaml.dump(openAPISpec, { noRefs: true });
+        document.getElementById("outputYaml").textContent = yamlStr;
+      })
+      .catch(err => {
+        document.getElementById("outputYaml").textContent = "Error loading schema: " + err;
+      });
+    }
+
+    window.onload = runIt;
+  </script>
+</body>
+</html>

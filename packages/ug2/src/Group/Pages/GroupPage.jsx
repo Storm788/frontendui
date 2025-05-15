@@ -1,8 +1,12 @@
-import { LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
+import { useState } from "react"
 import { useParams } from "react-router"
-import { GroupLargeCard } from "../GroupLargeCard"
-import { GroupReadAsyncAction } from "../Queries/GroupReadAsyncAction"
+
+import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
+import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
+import { GroupLargeCard } from "../Components"
+import { GroupReadAsyncAction } from "../Queries"
 import { GroupPageNavbar } from "./GroupPageNavbar"
+import { GroupUsersAttribute } from "../Vectors/GroupUsersAttribute"
 
 /**
  * A page content component for displaying detailed information about an group entity.
@@ -28,7 +32,7 @@ const GroupPageContent = ({group}) => {
     return (<>
         <GroupPageNavbar group={group} />
         <GroupLargeCard group={group}>
-            Group {JSON.stringify(group)}
+            <GroupUsersAttribute group={group} />
         </GroupLargeCard>
     </>)
 }
@@ -74,7 +78,7 @@ const GroupPageContentLazy = ({group}) => {
 
     return (<>
         {loading && <LoadingSpinner />}
-        {error && <ErrorEvent errors={error} />}
+        {error && <ErrorHandler errors={error} />}
         {entity && <GroupPageContent group={entity}  onChange={handleChange} onBlur={handleBlur} />}
     </>)
 }

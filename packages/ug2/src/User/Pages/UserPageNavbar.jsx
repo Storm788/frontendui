@@ -1,6 +1,7 @@
 import Nav from 'react-bootstrap/Nav'
 import { ProxyLink, MyNavbar, useHash } from '@hrbolek/uoisfrontend-shared';
 
+import { UserURI } from '../Components'
 /**
  * A navigation button component that generates a URL based on the user's ID and a specific segment.
  * The button uses a `ProxyLink` to navigate while preserving hash and query parameters.
@@ -35,7 +36,7 @@ import { ProxyLink, MyNavbar, useHash } from '@hrbolek/uoisfrontend-shared';
  */
 const TitleNavButton = ({ user, segment, label, ...props }) => {
     // const urlbase = (segment) => `/users/user/${segment}/${user?.id}`;
-    const urlbase = (segment) => `/users/user/view/${user?.id}#${segment}`;
+    const urlbase = (segment) => `${UserURI}${user?.id}#${segment}`;
     return (
         <Nav.Link as={"span"} {...props}>
             <ProxyLink to={urlbase(segment)}>{label}</ProxyLink>
@@ -43,7 +44,28 @@ const TitleNavButton = ({ user, segment, label, ...props }) => {
     );
 };
 
-
+/**
+ * Renders the navigation bar for an User page.
+ *
+ * This component uses a custom hook, `useHash()`, to determine the current hash
+ * and highlights the active segment. It displays a navigation bar (using MyNavbar)
+ * with several segments (e.g. "history", "roles", "graph"), each rendered as a 
+ * TitleNavButton. The segments are hardcoded in this component and only rendered 
+ * if an `user` object is provided.
+ *
+ * @component
+ * @param {Object} props - The component properties.
+ * @param {Object} props.user - The user entity object that provides context for the page.
+ * @param {string|number} props.user.id - The unique identifier for the user.
+ * @param {Function} props.onSearchChange - Callback function to handle changes in the search input.
+ *
+ * @returns {JSX.Element} The rendered UserPageNavbar component.
+ *
+ * @example
+ * // Example usage:
+ * const user = { id: 123, ... };
+ * <UserPageNavbar user={user} onSearchChange={handleSearchChange} />
+ */
 export const UserPageNavbar = ({ user, onSearchChange }) => {
     const [currentHash, setHash] = useHash(); // Use the custom hook to manage hash
 

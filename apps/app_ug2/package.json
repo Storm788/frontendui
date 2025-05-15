@@ -20,8 +20,14 @@
 
     "@hrbolek/uoisfrontend-shared": "*",
     "@hrbolek/uoisfrontend-gql-shared": "*",
+<<<<<<< HEAD
 
     "@storm788/pckg": "*"
+=======
+    "@hrbolek/uoisfrontend-ug": "*",
+    "@hrbolek/uoisfrontend-requests": "*",
+    "@hrbolek/uoisfrontend-zp": "*"
+>>>>>>> cb8fd5d1390f13588a5a3d860a2b9bfcbdb931ab
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",

@@ -1,4 +1,4 @@
-import { UserURI } from "../UserLink"
+import { UserURI } from "../Components/UserLink"
 import { UserPage } from "./UserPage"
 
 /**
@@ -10,10 +10,10 @@ import { UserPage } from "./UserPage"
  * component to render when the route matches.
  *
  * @constant {Object} UserRouterSegment
- * @property {string} path - The URL path pattern for the route, e.g., "/user/:id".
+ * @property {string} path - The URL path pattern for the route, e.g., "/user/user/view/:id".
  * @property {JSX.Element} element - The React element (component) to render, in this case, <UserPage />.
  */
 export const UserRouterSegment = {
-    path: `/${UserURI}/:id`,
+    path: `/${UserURI}:id`,
     element: <UserPage />,
 }

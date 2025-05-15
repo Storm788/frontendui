@@ -1,0 +1,1 @@
+export const _uriprefix = "ug2"

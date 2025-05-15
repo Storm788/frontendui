@@ -1,11 +1,5 @@
-export * from './UserCardCapsule'
-export * from './UserMediumContent'
-export * from './UserMediumCard'
-export * from './UserLink'
-export * from './UserLargeCard'
 
-export * from './UserCUDButton'
-
+export * from './Components'
 export * from './Scalars'
 export * from './Vectors'
 export * from './Queries'

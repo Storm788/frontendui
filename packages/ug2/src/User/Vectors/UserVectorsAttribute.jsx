@@ -33,7 +33,7 @@ export const UserVectorsAttribute = ({user}) => {
     return (
         <>
             {vectors.map(
-                vector => <div vector={item.id}>
+                vector => <div id={vector.id} key={vector.id}>
                     Probably {'<VectorMediumCard vector=\{vector\} />'} <br />
                     {JSON.stringify(vector)}
                 </div>
@@ -42,7 +42,7 @@ export const UserVectorsAttribute = ({user}) => {
     )
 }
 
-const VectorsAttributeQuery = `
+const UserVectorsAttributeQuery = `
 query UserQueryRead($id: id, $where: VectorInputFilter, $skip: Int, $limit: Int) {
     result: userById(id: $id) {
         __typename
@@ -55,8 +55,8 @@ query UserQueryRead($id: id, $where: VectorInputFilter, $skip: Int, $limit: Int)
 }
 `
 
-const VectorsAttributeAsyncAction = createAsyncGraphQLAction(
-    VectorsAttributeQuery,
+const UserVectorsAttributeAsyncAction = createAsyncGraphQLAction(
+    UserVectorsAttributeQuery,
     processVectorAttributeFromGraphQLResult("vectors")
 )
 
@@ -67,7 +67,7 @@ export const UserVectorsAttributeInifite = ({user}) => {
         <InfiniteScroll 
             Visualiser={'VectorMediumCard'} 
             actionParams={{skip: 0, limit: 10}}
-            asyncAction={VectorsAttributeAsyncAction}
+            asyncAction={UserVectorsAttributeAsyncAction}
         />
     )
 }

@@ -43,9 +43,18 @@ export default defineConfig({
       // Define aliases for modules, resolving them to specific paths
       "@hrbolek/uoisfrontend-shared": path.resolve(__dirname, "../../packages/shared/src"),
       "@hrbolek/uoisfrontend-gql-shared": path.resolve(__dirname, "../../packages/gql_shared/src"),
+<<<<<<< HEAD
 
 
       "@storm788/pckg": path.resolve(__dirname, "../../packages/exam/src"),
+=======
+      "@hrbolek/uoisfrontend-ug": path.resolve(__dirname, "../../packages/ug/src"),
+      "@hrbolek/uoisfrontend-granting": path.resolve(__dirname, "../../packages/granting/src"),
+      "@hrbolek/uoisfrontend-admissions": path.resolve(__dirname, "../../packages/admissions/src"),
+      "@hrbolek/uoisfrontend-requests": path.resolve(__dirname, "../../packages/requests/src"),
+      
+      "@hrbolek/uoisfrontend-zp": path.resolve(__dirname, "../../packages/z_pack/src"),
+>>>>>>> cb8fd5d1390f13588a5a3d860a2b9bfcbdb931ab
     },
   },
 
@@ -61,7 +70,13 @@ export default defineConfig({
       // Exclude specific libraries or modules from optimization
       "@hrbolek/uoisfrontend-shared",
       "@hrbolek/uoisfrontend-gql-shared",
+<<<<<<< HEAD
 
+=======
+      "@hrbolek/uoisfrontend-ug",
+      "@hrbolek/uoisfrontend-granting",
+      "@hrbolek/uoisfrontend-admissions",
+>>>>>>> cb8fd5d1390f13588a5a3d860a2b9bfcbdb931ab
       "@hrbolek/uoisfrontend-requests",
     ],
   },
@@ -83,6 +98,8 @@ export default defineConfig({
         '!../../packages/granting/**',
         '!../../packages/admissions/**',
         '!../../packages/requests/**',
+        
+        '!../../packages/z_pack/**',
       ],
     },
     hmr: {

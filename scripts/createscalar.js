@@ -156,7 +156,7 @@ async function copyDirectory(srcDir, destDir, newName) {
     // Process each scalar name
     for (const sname of scalarNames) {
       // Build destination file path: "{cname}{sname}Attrbibute.jsx" inside the same directory.
-      const destFileName = `${componentName}${sname}Attrbibute.jsx`;
+      const destFileName = `${componentName}${sname}Attribute.jsx`;
       const destFilePath = path.join(componentDir, "Scalars", destFileName);
       
       await processFile(sourceFilePath, destFilePath, sname);

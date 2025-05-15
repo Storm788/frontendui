@@ -4,6 +4,7 @@ const path = require('path');
 const readline = require('readline');
 const crypto = require('crypto');
 
+
 // Helper: perform case-preserving replacement of target with replacement
 function preserveCaseReplace(text, target, replacement) {
   const regex = new RegExp(target, 'gi');

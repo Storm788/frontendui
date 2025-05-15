@@ -3,10 +3,11 @@ import { UserLargeFragment } from "./UserFragments";
 
 const UserUpdateMutation = createQueryStrLazy(
 `
-mutation UserUpdateMutation($id: UUID!, $lastchange: DateTime!, $name: String, $name_en: String) {
-  result: userUpdate(
-    user: {id: $id, lastchange: $lastchange, name: $name, nameEn: $name_en}
-  ) {
+mutation UserUpdateMutation($id: UUID!, $lastchange: DateTime!, $name: String, $surname: String, $email: String) {
+  userUpdate(
+    user:{id: $id, lastchange: $lastchange, name: $name, surname: $surname, email: $email }
+  ) 
+  {
     ... on UserGQLModelUpdateError {
       failed
       msg

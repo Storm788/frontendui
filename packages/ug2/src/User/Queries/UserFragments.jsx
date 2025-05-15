@@ -7,7 +7,8 @@ fragment UserLink on UserGQLModel {
   id
   lastchange
   name
-  nameEn
+  surname
+  email
 }
 `)
 
@@ -22,7 +23,22 @@ fragment UserMedium on UserGQLModel {
 export const UserLargeFragment = createQueryStrLazy(
 `
 fragment UserLarge on UserGQLModel {
-  ...UserMedium
+  ...UserMedium  
+  memberships(where: {valid: {_eq: true}}) {
+    __typename
+    id
+    valid
+    startdate
+    enddate
+    group {
+      id
+      name
+      grouptype {
+        id
+        name
+      }
+    }
+  }
 }
 `, UserMediumFragment)
   

@@ -6,8 +6,13 @@ const crypto = require('crypto');
 
 // Helper: perform case-preserving replacement of target with replacement
 function preserveCaseReplace(text, target, replacement) {
+  // Nahrazení unikátním placeholderem, aby se tento text nedotkl nahrazovací logiky
+  const placeholder = "processVVVVVVAttributeFromGraphQLResult";
+  text = text.replace(/processVectorAttributeFromGraphQLResult/g, placeholder);
+
+  // Původní kód nahrazování s ohledem na zachování velikosti písmen
   const regex = new RegExp(target, 'gi');
-  return text.replace(regex, (match) => {
+  text = text.replace(regex, (match) => {
     if (match === match.toUpperCase()) {
       return replacement.toUpperCase();
     } else if (match === match.toLowerCase()) {
@@ -19,6 +24,11 @@ function preserveCaseReplace(text, target, replacement) {
       return replacement;
     }
   });
+
+  // Vrácení původního textu zpět (placeholder nahrazuje původní řetězec)
+  text = text.replace(new RegExp(placeholder, 'g'), "processVectorAttributeFromGraphQLResult");
+
+  return text;
 }
 
 // Helper: compute SHA256 checksum of given text
@@ -143,8 +153,8 @@ async function copyDirectory(srcDir, destDir, newName) {
     }
 
     // Define source file path: in the component directory under "Vectors" folder,
-    // the file name is expected to be "{cname}VectorAttribute.jsx"
-    const sourceFileName = `${componentName}VectorAttribute.jsx`;
+    // the file name is expected to be "{cname}VectorsAttribute.jsx"
+    const sourceFileName = `${componentName}VectorsAttribute.jsx`;
     const sourceFilePath = path.join(componentDir, "Vectors", sourceFileName);
     try {
       await fs.access(sourceFilePath);
@@ -156,7 +166,7 @@ async function copyDirectory(srcDir, destDir, newName) {
     // Process each vector name
     for (const sname of vectorNames) {
       // Build destination file path: "{cname}{sname}Attrbibute.jsx" inside the same directory.
-      const destFileName = `${componentName}${sname}Attrbibute.jsx`;
+      const destFileName = `${componentName}${sname}sAttribute.jsx`;
       const destFilePath = path.join(componentDir, "Vectors", destFileName);
       
       await processFile(sourceFilePath, destFilePath, sname);

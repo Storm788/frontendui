@@ -37,12 +37,12 @@ export const placeholder_data = {
     "minScore": 69,   
 }
 
-const ExamPageContent = ({exam}) => {
+const ExamPageContent = ({placeholder_data}) => {
     return (<>
-        <ExamPageNavbar exam={exam} />
-        <ExamLargeCard exam={exam}>
-            Exam {JSON.stringify(exam)}
-            <ExamData exam={exam} />
+        <ExamPageNavbar exam={placeholder_data} />
+        <ExamLargeCard exam={placeholder_data}>
+            Exam {JSON.stringify(placeholder_data)}
+            <ExamData exam={placeholder_data} />
         </ExamLargeCard>
     </>)
 }
@@ -113,6 +113,6 @@ export const ExamPage = () => {
     const {id} = useParams()
     const exam = {id}
     
-    return <ExamPageContentLazy exam={exam} />
-    //return <ExamPageContent exam={placeholder_data} />
+    //return <ExamPageContentLazy exam={exam} />
+    return <ExamPageContent exam={placeholder_data} />
 }

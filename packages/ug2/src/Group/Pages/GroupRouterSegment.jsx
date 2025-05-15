@@ -1,4 +1,4 @@
-import { GroupURI } from "../GroupLink"
+import { GroupURI } from "../Components/GroupLink"
 import { GroupPage } from "./GroupPage"
 
 /**
@@ -10,10 +10,10 @@ import { GroupPage } from "./GroupPage"
  * component to render when the route matches.
  *
  * @constant {Object} GroupRouterSegment
- * @property {string} path - The URL path pattern for the route, e.g., "/group/:id".
+ * @property {string} path - The URL path pattern for the route, e.g., "/group/group/view/:id".
  * @property {JSX.Element} element - The React element (component) to render, in this case, <GroupPage />.
  */
 export const GroupRouterSegment = {
-    path: `/${GroupURI}/:id`,
+    path: `/${GroupURI}:id`,
     element: <GroupPage />,
 }
