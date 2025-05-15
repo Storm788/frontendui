@@ -3,7 +3,7 @@ import { useParams } from "react-router"
 import { ExamData } from "../Components/ExamData"
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
-import { ExamLargeCard } from "../Components"
+import { ExamButton, ExamLargeCard } from "../Components"
 import { ExamReadAsyncAction } from "../Queries"
 import { ExamPageNavbar } from "./ExamPageNavbar"
 
@@ -29,20 +29,16 @@ import { ExamPageNavbar } from "./ExamPageNavbar"
  */
 
 
-export const placeholder_data = {
-    
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "name": "Flasarova hodina brainrotu",
-    "maxScore": 100,
-    "minScore": 69,   
-}
 
-const ExamPageContent = ({placeholder_data}) => {
+const ExamPageContent = ({exam}) => {
     return (<>
-        <ExamPageNavbar exam={placeholder_data} />
-        <ExamLargeCard exam={placeholder_data}>
-            Exam {JSON.stringify(placeholder_data)}
-            <ExamData exam={placeholder_data} />
+        <ExamPageNavbar exam={exam} />
+        <ExamLargeCard exam={exam}>
+            Exam {JSON.stringify(exam)}
+            <ExamData exam={exam} />
+        <ExamButton exam={exam} operation="C">Insert</ExamButton>
+        <ExamButton exam={exam} operation="U">Update</ExamButton>
+        <ExamButton exam ={exam} operation="D">Delete</ExamButton>
         </ExamLargeCard>
     </>)
 }
@@ -113,6 +109,6 @@ export const ExamPage = () => {
     const {id} = useParams()
     const exam = {id}
     
-    //return <ExamPageContentLazy exam={exam} />
-    return <ExamPageContent exam={placeholder_data} />
+    return <ExamPageContentLazy exam={exam} />
+    //return <ExamPageContent exam={placeholder_data} />
 }

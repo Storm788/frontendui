@@ -35,13 +35,13 @@ export const ExamMediumContent = ({exam, children}) => {
 }
 */
 export const ExamMediumContent = ({exam, children}) => {
+    console.log("ExamMediumContent", exam)
     return (
         <>
-            <div>
-                <b>jméno</b> {exam.name} <br />
-                <b>příjmení</b> {exam.surname} <br />
-                <b>email</b> <a href={"mailto:"+exam.email}>{exam.email}</a> <br />
-            </div>
+            ID:({exam.id}) <br/>
+            Name: {exam.name} <br/>
+            Max Score: {exam.maxScore} <br/>
+            Min Score: {exam.minScore} <br/>
             {/* UserMediumContent <br />
             {JSON.stringify(user)} */}
             {children}

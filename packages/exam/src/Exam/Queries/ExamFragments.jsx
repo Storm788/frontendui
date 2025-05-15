@@ -5,7 +5,6 @@ export const ExamLinkFragment = createQueryStrLazy(
 fragment ExamLink on ExamGQLModel {
   __typename
   id
-  Evaluation
 }
 `)
 
@@ -21,17 +20,10 @@ export const ExamLargeFragment = createQueryStrLazy(
 `
 fragment ExamLarge on ExamGQLModel {
   ...ExamMedium
-  examPage {
-    id
-    maxScore
-    minScore
-    name
-    evaluations {
-      id
-      passed
-      grade
-      description
-    }
+  id  
+  name
+  maxScore
+  minScore
 }
 `, ExamMediumFragment)
   
