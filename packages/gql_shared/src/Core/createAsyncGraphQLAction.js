@@ -178,32 +178,32 @@ export const createAsyncGraphQLAction = (graphQLQuery, params = updateItemsFromG
  */
 const isTypenameCorrectlyPlaced = (queryString) => {
     return queryString.includes("__typename")
-    const normalizedQuery = queryString.trim();
+    // const normalizedQuery = queryString.trim();
 
-    // Regex patterns for detecting query types
-    const fragmentRegex = /^fragment\s+\w+\s+on\s+\w+\s*\{([\s\S]*)\}$/s;
-    const queryOrMutationRegex = /^(query|mutation)\s+\w*\s*\(.*?\)\s*\{.*?__typename.*?\}/s;
+    // // Regex patterns for detecting query types
+    // const fragmentRegex = /^fragment\s+\w+\s+on\s+\w+\s*\{([\s\S]*)\}$/s;
+    // const queryOrMutationRegex = /^(query|mutation)\s+\w*\s*\(.*?\)\s*\{.*?__typename.*?\}/s;
 
-    if (fragmentRegex.test(normalizedQuery)) {
-        // Extract the first level of braces in the fragment
-        const firstLevelContent = normalizedQuery.match(fragmentRegex)?.[1] || '';
-        let level = 0;
-        let firstLevelOnly = '';
+    // if (fragmentRegex.test(normalizedQuery)) {
+    //     // Extract the first level of braces in the fragment
+    //     const firstLevelContent = normalizedQuery.match(fragmentRegex)?.[1] || '';
+    //     let level = 0;
+    //     let firstLevelOnly = '';
 
-        for (const char of firstLevelContent) {
-            if (char === '{') level++;
-            if (level === 1) firstLevelOnly += char;
-            if (char === '}') level--;
-        }
+    //     for (const char of firstLevelContent) {
+    //         if (char === '{') level++;
+    //         if (level === 1) firstLevelOnly += char;
+    //         if (char === '}') level--;
+    //     }
 
-        // Check if __typename exists in the extracted first-level content
-        return /\b__typename\b/.test(firstLevelOnly);
-    } else if (queryOrMutationRegex.test(normalizedQuery)) {
-        // For queries/mutations, just check if __typename exists in the main body
-        return /\b__typename\b/.test(normalizedQuery);
-    }
+    //     // Check if __typename exists in the extracted first-level content
+    //     return /\b__typename\b/.test(firstLevelOnly);
+    // } else if (queryOrMutationRegex.test(normalizedQuery)) {
+    //     // For queries/mutations, just check if __typename exists in the main body
+    //     return /\b__typename\b/.test(normalizedQuery);
+    // }
 
-    return false;
+    // return false;
 };
 
 /**

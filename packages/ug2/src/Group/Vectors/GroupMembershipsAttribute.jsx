@@ -1,5 +1,6 @@
 import { createAsyncGraphQLAction, processVectorAttributeFromGraphQLResult } from "@hrbolek/uoisfrontend-gql-shared"
 import { InfiniteScroll } from "@hrbolek/uoisfrontend-shared"
+import { UserMediumCard } from "../../User"
 
 /**
  * A component for displaying the `memberships` attribute of an group entity.
@@ -34,8 +35,9 @@ export const GroupMembershipsAttribute = ({group}) => {
         <>
             {memberships.map(
                 membership => <div id={membership.id} key={membership.id}>
-                    Probably {'<MembershipMediumCard membership=\{membership\} />'} <br />
-                    {JSON.stringify(membership)}
+                    {membership?.user && (
+                        <UserMediumCard user={membership.user} />
+                    )}
                 </div>
             )}
         </>

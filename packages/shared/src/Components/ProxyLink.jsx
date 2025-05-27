@@ -41,7 +41,7 @@ export const ProxyLink = ({ to, children, preserveHash=true, preserveSearch=true
     // const destinationUrl_hash = destinationUrl.hash
     destinationUrl.search = destinationUrl.search || currentSearch; // Merge query parameters if missing
     destinationUrl.hash = destinationUrl.hash || currentHash; // Merge hash if missing
-
+    // destinationUrl.hash = ""
     return (
         <Link to={destinationUrl.pathname + destinationUrl.search + destinationUrl.hash} {...others} reloadDocument={!isLocal}>
             {children}
