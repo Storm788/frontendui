@@ -38,5 +38,5 @@ jobs:
       - name: Publish Packages
         run: npm run publish:packages
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.STORM788 }}
+          NODE_AUTH_TOKEN: ${{ secrets.github }}
 
