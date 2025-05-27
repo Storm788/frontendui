@@ -1,20 +1,28 @@
-import React, { useState } from 'react';
+import { ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
+import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
+import { ExamLink } from "."
+import { ListGroup } from "react-bootstrap"
+import { ExamReadPageAsyncAction } from "../Queries/ExamReadPageAsyncAction"
 
 
-export const ExamData = ({}) => {
-    
-    let value = 0;
-    const [state, setState] = useState({});
-    const onClick = () => {
-        value = value + 1;
-        const newState = state + 1;
-        setState(newState);
+export const ExamDocumentList = ({ }) => {
+    const { dispatchResult, loading, error } = useAsyncAction(ExamReadPageAsyncAction, {})
+
+
+    if (loading) {
+        return <LoadingSpinner />
     }
+    if (error) {
+        return <ErrorHandler errors={error} />
+    }
+
     return (
-        <div>
-            ExamData: {value}, {state}
-            <button onClick = {onClick}>Increment</button>
-            <input type="text" value = "demo"/>
-        </div>
-    );
-};
+        <ListGroup>
+            {dispatchResult.data.result.map(exam => (
+                <ListGroup.Item key={exam.id}>
+                    <ExamLink exam={exam} />
+                </ListGroup.Item>
+            ))}
+        </ListGroup>
+    )
+}

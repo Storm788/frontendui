@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { useParams } from "react-router"
-import { ExamData } from "../Components/ExamData"
+import { data, useParams } from "react-router"
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
 import { ExamButton, ExamLargeCard } from "../Components"
@@ -35,9 +34,9 @@ const ExamPageContent = ({ exam }) => {
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
             Exam {JSON.stringify(exam)} <br />
-            {/* <ExamButton exam={exam} operation="C">Insert</ExamButton> <br /> */}
-            <ExamButton exam={exam} operation="U" className = "btn btn-success">Update</ExamButton><br />
-            {/* <ExamButton exam={exam} operation="D">Delete</ExamButton><br /> */}
+            <ExamButton exam={{}} operation="C" className="btn btn-warning" onDone={(data)=>console.log(data)}>Insert</ExamButton> <br />
+            <ExamButton exam={exam} operation="U" className="btn btn-success">Update</ExamButton><br />
+            <ExamButton exam={exam} operation="D" className="btn btn-danger">Delete</ExamButton><br />
         </ExamLargeCard>
     </>)
 }

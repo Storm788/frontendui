@@ -3,7 +3,7 @@ import { ExamLargeFragment } from "./ExamFragments";
 
 const ExamReadPageQuery = createQueryStrLazy(
 `
-query ExamReadPageQuery($skip: Int, $limit: Int, $where: ExamWhereInputFilter) {
+query ExamReadPageQuery($skip: Int, $limit: Int, $where: ExamInputFilter) {
   result: examPage(skip: $skip, limit: $limit, where: $where) {
     ...ExamLarge
   }
