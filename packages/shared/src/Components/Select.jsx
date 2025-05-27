@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useEffect, useRef } from 'react'
 import { Label } from './Label'
 
@@ -58,63 +58,93 @@ import { Label } from './Label'
  *   );
  * };
  */
-export const Select = ({label, children, ...props}) => {
-    const {id, value, defaultValue, onChange, onBlur} = props
+export const Select_ = ({ label, children, defaultValue, onChange, onBlur, ariaHidden, ...props }) => {
     const selectRef = useRef(null);
-    // const fired = useRef(false)
-    // useEffect(() => {
-    //     if (!children) return
-    //     console.log("got children")
-    //     if (!fired.current) {
-    //       let initialValue = value || defaultValue;
-    //       // Simulate the onChange event
-    //       const e = { target: { id, value: initialValue } };
-    //       onChange(e);
-    //       fired.current = true;
-    //     }
-    //   }, [id, value, defaultValue, onChange, children]);
+    const prevValueRef = useRef(defaultValue); // poslední známá hodnota
 
     useEffect(() => {
+        if (!selectRef.current || typeof onChange !== "function") return;
+
         const observer = new MutationObserver(() => {
-            if (selectRef.current) {
-                
-                const selectedValue = selectRef.current.value;
-                const event = { target: { id: selectRef.current.id, value: selectedValue } };
-                console.log("Select firing an event", event)
-                onChange(event);
-            }
+            // Oddálíme vyhodnocení, až se React přepne na novou hodnotu
+            setTimeout(() => {
+                const current = selectRef.current?.value;
+
+                if (prevValueRef.current !== current) {
+                    prevValueRef.current = current;
+                    const event = { target: { id: selectRef.current.id, value: current } };
+                    console.log("Select firing event due to real change", event);
+                    onChange(event);
+                } else {
+                    console.log("MutationObserver detected change but value unchanged");
+                }
+            }, 0);
         });
 
-        if (selectRef.current) {
-            observer.observe(selectRef.current, {
-            childList: true, // Listen for child changes
-            });
+        observer.observe(selectRef.current, { childList: true, subtree: true });
+
+        // Uložíme počáteční hodnotu
+        if (selectRef.current?.value) {
+            prevValueRef.current = selectRef.current.value;
         }
 
         return () => observer.disconnect();
-    }, [onChange]);
+    }, [onChange, children]);
 
-    const changedprops = {...props}
-    // const ReactChildren = React.Children(children)
-    // if (ReactChildren.lenght > 0) {
-    //     const firstChild = ReactChildren[0]
-    // }
-    // const handleOnChange = (e) => {
-    //     onChange(e)
-    // }
+    if (ariaHidden) return null;
 
-    // const handleOnBlur = (e) => {
-    //     console.log("Select onChange", e)
-    //     onBlur(e)
-    // }
+    const selectElement = (
+        <select
+            ref={selectRef}
+            defaultValue={defaultValue}
+            onChange={onChange}
+            onBlur={onBlur}
+            {...props}
+        >
+            {children}
+        </select>
+    );
 
-    return (
-        <Label title={label}>
-            <select ref={selectRef} {...changedprops} >
-                {children} 
-            </select>
-        </Label>
-    )
-}
+    return label ? <Label title={label}>{selectElement}</Label> : selectElement;
+};
 
 
+export const Select = ({ id, label, defaultValue, onChange, onBlur, children, ...props }) => {
+    const [internalValue, setInternalValue] = useState(defaultValue ?? "");
+
+    // Když se externí `value` změní, aktualizuj i vnitřní stav
+    useEffect(() => {
+        setInternalValue(defaultValue ?? "");
+    }, [defaultValue]);
+
+    const handleChange = (e) => {
+        const newValue = e.target.value;
+        setInternalValue(newValue); // aktualizuj interní stav
+        onChange?.({ target: { id, value: newValue } }); // zavolej callback s konzistentním tvarem
+    };
+
+    const handleBlur = (e) => {
+        const newValue = e.target.value;
+        onBlur?.({ target: { id, value: newValue } });
+    };
+
+    const selectElement = (
+        <select
+            id={id}
+            value={internalValue}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            {...props}
+        >
+            {children}
+        </select>
+    );
+
+    if (props.ariaHidden) return null;
+
+    return label ? (
+        <Label title={label}>{selectElement}</Label>
+    ) : (
+        selectElement
+    );
+};

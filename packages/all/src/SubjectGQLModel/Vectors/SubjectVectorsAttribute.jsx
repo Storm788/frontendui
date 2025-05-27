@@ -1,0 +1,233 @@
+import { useAsyncAction, createAsyncGraphQLAction, processVectorAttributeFromGraphQLResult } from "@hrbolek/uoisfrontend-gql-shared"
+import { ErrorHandler, InfiniteScroll, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
+import { use, useEffect } from "react";
+
+
+/**
+ * Inserts a VectorGQLModel item into a subject’s vectors array and dispatches an update.
+ *
+ * @param {Object} subject - The current subject object containing a `vectors` array.
+ * @param {Object} vectorItem - The item to insert; must have `__typename === "VectorGQLModel"`.
+ * @param {Function} dispatch - Redux dispatch function (or similar) to call the update action.
+ */
+const followUpSubjectVectorItemInsert = (subject, vectorItem, dispatch) => {
+    const { __typename } = vectorItem;
+    if (__typename === "VectorGQLModel") {
+        const { vectors, ...others } = subject;
+        const newSubjectVectorItems = [...vectors, vectorItem];
+        const newSubject = { ...others, vectors: newSubjectVectorItems };
+        dispatch(ItemActions.item_update(newSubject));
+    }
+};
+
+/**
+ * Replaces an existing VectorGQLModel item in a subject’s vectors array and dispatches an update.
+ *
+ * @param {Object} subject - The current subject object containing a `vectors` array.
+ * @param {Object} vectorItem - The updated item; must have `__typename === "VectorGQLModel"` and an `id` field matching an existing item.
+ * @param {Function} dispatch - Redux dispatch function (or similar) to call the update action.
+ */
+const followUpSubjectVectorItemUpdate = (subject, vectorItem, dispatch) => {
+    const { __typename } = vectorItem;
+    if (__typename === "VectorGQLModel") {
+        const { vectors, ...others } = subject;
+        const newSubjectVectorItems = vectors.map(item =>
+            item.id === vectorItem.id ? vectorItem : item
+        );
+        const newSubject = { ...others, vectors: newSubjectVectorItems };
+        dispatch(ItemActions.item_update(newSubject));
+    }
+};
+
+/**
+ * Removes a VectorGQLModel item from a subject’s vectors array by its `id` and dispatches an update.
+ *
+ * @param {Object} subject - The current subject object containing a `vectors` array.
+ * @param {Object} vectorItem - The item to delete; must have `__typename === "VectorGQLModel"` and an `id` field.
+ * @param {Function} dispatch - Redux dispatch function (or similar) to call the update action.
+ */
+const followUpSubjectVectorItemDelete = (subject, vectorItem, dispatch) => {
+    const { __typename } = vectorItem;
+    if (__typename === "VectorGQLModel") {
+        const { vectors, ...others } = subject;
+        const newSubjectVectorItems = vectors.filter(
+            item => item.id !== vectorItem.id
+        );
+        const newSubject = { ...others, vectors: newSubjectVectorItems };
+        dispatch(ItemActions.item_update(newSubject));
+    }
+};
+
+const SubjectVectorsAttributeQuery = `
+query SubjectQueryRead($id: UUID!, $where: VectorInputFilter, $skip: Int, $limit: Int) {
+    result: subjectById(id: $id) {
+        __typename
+        id
+        vectors(skip: $skip, limit: $limit, where: $where) {
+            __typename
+            id
+        }
+    }
+}
+`
+
+const SubjectVectorsAttributeAsyncAction = createAsyncGraphQLAction(
+    SubjectVectorsAttributeQuery,
+    processVectorAttributeFromGraphQLResult("vectors")
+)
+
+/**
+ * A component for displaying the `vectors` attribute of a subject entity.
+ *
+ * This component checks if the `vectors` attribute exists on the `subject` object. If `vectors` is undefined,
+ * the component returns `null` and renders nothing. Otherwise, it maps over the (optionally filtered) `vectors` array
+ * and displays a placeholder message and a JSON representation for each item.
+ *
+ * @component
+ * @param {Object} props - The props for the SubjectVectorsAttribute component.
+ * @param {Object} props.subject - The object representing the subject entity.
+ * @param {Array<Object>} [props.subject.vectors] - An array of vector items associated with the subject entity.
+ *   Each item is expected to have a unique `id` property.
+ * @param {Function} [props.filter=Boolean] - (Optional) A function to filter the vectors array before rendering.
+ *
+ * @returns {JSX.Element|null} A JSX element displaying the (filtered) `vectors` items or `null` if the attribute is undefined or empty.
+ *
+ * @example
+ * // Basic usage:
+ * const subjectEntity = { 
+ *   vectors: [
+ *     { id: 1, name: "Vector Item 1" }, 
+ *     { id: 2, name: "Vector Item 2" }
+ *   ] 
+ * };
+ * <SubjectVectorsAttribute subject={subjectEntity} />
+ *
+ * @example
+ * // With a custom filter:
+ * <SubjectVectorsAttribute 
+ *   subject={subjectEntity}
+ *   filter={vector => vector.name.includes("1")}
+ * />
+ */
+export const SubjectVectorsAttribute = ({subject, filter=Boolean}) => {
+    const { vectors: unfiltered } = subject
+    if (typeof unfiltered === 'undefined') return null
+    const vectors = unfiltered.filter(filter)
+    if (vectors.length === 0) return null
+    return (
+        <>
+            {vectors.map(
+                vector => <div id={vector.id} key={vector.id}>
+                    {/* <VectorMediumCard vector={vector} /> */}
+                    {/* <VectorLink vector={vector} /> */}
+                    Probably {'<VectorMediumCard vector={vector} />'} <br />
+                    <pre>{JSON.stringify(vector, null, 4)}</pre>
+                </div>
+            )}
+        </>
+    )
+}
+
+/**
+ * Visualiser component for displaying a list of vector items using `SubjectVectorsAttribute`.
+ *
+ * Wraps the `SubjectVectorsAttribute` component, passing the given `items` as the `vectors` attribute
+ * on a synthetic `subject` object. All other props are forwarded.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Array<Object>} props.items - The array of vector items to be visualized.
+ * @param {...any} [props] - Additional props forwarded to `SubjectVectorsAttribute` (e.g., `filter`).
+ *
+ * @returns {JSX.Element|null} Rendered list of vectors or `null` if none are provided.
+ *
+ * @example
+ * <VectorsVisualiser
+ *   items={[
+ *     { id: 1, name: "Vector 1" },
+ *     { id: 2, name: "Vector 2" }
+ *   ]}
+ *   filter={v => v.name.includes("1")}
+ * />
+ */
+const VectorsVisualiser = ({ items, ...props }) => 
+    <SubjectVectorsAttribute {...props} subject={{ vectors: items }} />
+
+/**
+ * Infinite-scrolling component for the `vectors` attribute of a subject entity.
+ *
+ * Uses the generic `InfiniteScroll` component to fetch, merge, and display the `vectors` array
+ * associated with the provided `subject` object. It utilizes `VectorsVisualiser` for rendering,
+ * and handles pagination, lazy-loading, and merging of items as the user scrolls.
+ *
+ * @component
+ * @param {Object} props - Component props.
+ * @param {Object} props.subject - The subject entity containing the `vectors` array.
+ * @param {Array<Object>} [props.subject.vectors] - (Optional) Preloaded vector items.
+ * @param {Object} [props.actionParams={}] - Optional extra parameters for the async fetch action (merged with pagination).
+ * @param {...any} [props] - Additional props passed to `InfiniteScroll` or `VectorsVisualiser`.
+ *
+ * @returns {JSX.Element} An infinite-scrolling list of vectors.
+ *
+ * @example
+ * <SubjectVectorsAttributeInfinite
+ *   subject={{
+ *     vectors: [
+ *       { id: 1, name: "Vector 1" },
+ *       { id: 2, name: "Vector 2" }
+ *     ]
+ *   }}
+ * />
+ */
+export const SubjectVectorsAttributeInfinite = ({subject, actionParams={}, ...props}) => { 
+    const {vectors} = subject
+
+    return (
+        <InfiniteScroll 
+            {...props}
+            Visualiser={VectorsVisualiser} 
+            preloadedItems={vectors}
+            actionParams={{...actionParams, skip: 0, limit: 10}}
+            asyncAction={SubjectVectorsAttributeAsyncAction}
+        />
+    )
+}
+
+/**
+ * A lazy-loading component for displaying filtered `vectors` from a `subject` entity.
+ *
+ * This component uses the `SubjectVectorsAttributeAsyncAction` to asynchronously fetch
+ * the `subject.vectors` data. It shows a loading spinner while fetching, handles errors,
+ * and filters the resulting list using a custom `filter` function (defaults to `Boolean` to remove falsy values).
+ *
+ * Each vector item is rendered as a `<div>` with its `id` as both the `key` and the `id` attribute,
+ * and displays a formatted JSON preview using `<pre>`.
+ *
+ * @component
+ * @param {Object} props - The properties object.
+ * @param {Object} props.subject - The subject entity or identifying query variables used to fetch it.
+ * @param {Function} [props.filter=Boolean] - A filtering function applied to the `vectors` array before rendering.
+ *
+ * @returns {JSX.Element} A rendered list of filtered vectors or a loading/error placeholder.
+ *
+ * @example
+ * <SubjectVectorsAttributeLazy subject={{ id: "abc123" }} />
+ *
+ * 
+ * @example
+ * <SubjectVectorsAttributeLazy
+ *   subject={{ id: "abc123" }}
+ *   filter={(v) => v.status === "active"}
+ * />
+ */
+export const SubjectVectorsAttributeLazy = ({subject, filter=Boolean}) => {
+    const {loading, error, entity, fetch} = useAsyncAction(SubjectVectorsAttributeAsyncAction, subject, {deferred: true})
+    useEffect(() => {
+        fetch(subject)
+    }, [subject])
+
+    if (loading) return <LoadingSpinner />
+    if (error) return <ErrorHandler errors={error} />
+
+    return <SubjectVectorsAttribute subject={entity} filter={filter} />    
+}

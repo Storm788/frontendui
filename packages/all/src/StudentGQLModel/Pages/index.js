@@ -1,0 +1,5 @@
+export * from './StudentPage'
+export * from './StudentVectorPage'
+export * from './StudentEditPage'
+export * from './StudentPageNavbar'
+export * from './StudentRouterSegment'

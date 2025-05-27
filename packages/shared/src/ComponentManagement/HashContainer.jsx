@@ -26,32 +26,75 @@ export const useHash = () => {
  * A React container component that monitors hash changes in the URL
  * and displays only the children whose `id` matches the current hash.
  *
- * If a child does not have an `id` prop or no children match the current hash,
- * it renders a fallback message or nothing.
+ * If no children match the current hash:
+ * - when `firstAsDefault` is `true`, it renders the *first* child;
+ * - otherwise it renders a fallback message.
  *
  * @component
  * @param {Object} props - The component props.
- * @param {React.ReactNode} props.children - The children components to conditionally render based on the hash.
- * @returns {JSX.Element} The rendered child component(s) or a fallback message.
+ * @param {React.ReactNode} props.children
+ *   The children components to conditionally render based on the hash.
+ * @param {boolean} [props.firstAsDefault=false]
+ *   If `true`, shows the first child when there’s no hash match;
+ *   if `false`, shows a default fallback message.
+ * @returns {JSX.Element}
+ *   The rendered child component(s) or a fallback message.
  *
  * @example
- * <HashContainer>
+ * <HashContainer firstAsDefault>
  *   <div id="tab1">Tab 1 Content</div>
  *   <div id="tab2">Tab 2 Content</div>
  * </HashContainer>
- * // If the URL hash is "#tab1", it renders "Tab 1 Content".
+ * // If the URL hash is "#tab3" and firstAsDefault is `true`, it renders "Tab 1 Content".
  */
-export const HashContainer = ({ children }) => {
+export const HashContainer = ({ children, firstAsDefault=false }) => {
     const [currentHash] = useHash(); // Use custom hook to track the current hash
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // Filter children based on the current hash
-    const activeChildren = React.Children.toArray(children).filter(
+    const ReactChildren = React.Children.toArray(children)
+    const activeChildren = ReactChildren.filter(
         (child) => React.isValidElement(child) && (!child.props.id || child.props.id === currentHash)
     );
 
+    // Pokud chci první child jako default a žádný nepasuje, změním URL hash
+    useEffect(() => {
+        if (
+        firstAsDefault &&
+        activeChildren.length === 0 &&
+        ReactChildren.length > 0
+        ) {
+        const firstChild = ReactChildren[0];
+        const firstId = firstChild.props.id;
+        if (firstId && currentHash !== firstId) {
+            // naviguji na stejnou cestu + nový hash
+            navigate(`${location.pathname}#${firstId}`, { replace: true });
+        }
+        }
+    }, [
+        firstAsDefault,
+        activeChildren.length,
+        ReactChildren,
+        currentHash,
+        navigate,
+        location.pathname,
+    ]);    
+
+    // pokud mám nějaké matching children, vykreslím je
+    if (activeChildren.length > 0) {
+        return <>{activeChildren}</>;
+    }
+
+    // žádné matching, ale firstAsDefault = true
+    if (firstAsDefault && ReactChildren.length > 0) {
+        return <>{ReactChildren[0]}</>;
+    }
+
+    // fallback zpráva
     return (
-        <div>
-            {activeChildren.length > 0 ? activeChildren : <p>No matching content for the current hash.</p>}
-        </div>
-    );
+        <>
+        <p>No matching content for the current hash.</p>
+        </>
+    );    
 };

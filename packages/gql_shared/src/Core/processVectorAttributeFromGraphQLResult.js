@@ -36,7 +36,7 @@ export const processVectorAttributeFromGraphQLResult = (vectorname) => {
 
         return (dispatch, getState, next) => {
             const data = jsonResult?.data;
-
+            // console.log(data)
             if (!data) {
                 console.warn("processVectorAttributeFromGraphQLResult: No data found in jsonResult");
                 return next(jsonResult);

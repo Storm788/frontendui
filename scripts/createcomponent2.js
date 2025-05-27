@@ -406,8 +406,7 @@ async function prompt(question) {
     });
 }
 
-
-(async () => {
+const main = async () => {
     try {
         // Ask the user for the destination directory (relative to 'packages')
         const destRelative = await prompt(
@@ -417,6 +416,15 @@ async function prompt(question) {
             console.error("No destination provided. Exiting.");
             process.exit(1);
         }
+
+        // Define the root destination directory (under packages/{destRelative}/src)
+        const destRoot = path.resolve(__dirname, '..', 'packages', destRelative, 'src');
+
+        const entries = await fs.readdir(destRoot, { withFileTypes: true });
+        // vyfiltrujeme jen adresáře a vrátíme jejich názvy
+        const models = entries
+            .filter(entry => entry.isDirectory())
+            .map(entry => entry.name);
 
         // Ask the user for the new names to replace "Empty" (comma-separated)
         const newNamesInput = await prompt("Enter the new names to replace 'Empty' (comma-separated): ");
@@ -436,9 +444,6 @@ async function prompt(question) {
             process.exit(1);
         }
 
-        // Define the root destination directory (under packages/{destRelative}/src)
-        const destRoot = path.resolve(__dirname, '..', 'packages', destRelative, 'src');
-
         // Define source directory: in our _empty package the templates are under packages/_empty/src/Empty
         const srcDir = path.resolve(__dirname, '..', 'packages', '_empty', 'src', 'Empty');
         console.log(`Source directory: ${srcDir}`);
@@ -455,5 +460,7 @@ async function prompt(question) {
     } catch (err) {
         console.error("❌ Error:", err);
     }
-})();
+}
+
+main();
 

@@ -97,6 +97,36 @@ const followUpUserUpdate = (user, membership, dispatch) => {
     } 
 }
 
+const followUpEntityVectorItemInsert = (entity, vectorItem, dispatch) => {
+    const {__typename} = vectorItem
+    if (__typename === "VectorGQLModel") {
+        const {vectors, ...others} = entity
+        const newEntityVectorItems = [...vectors, vectorItem]
+        const newEntity = {...others, vectors: newEntityVectorItems}
+        dispatch(ItemActions.item_update(newEntity));
+    } 
+}
+
+const followUpEntityVectorItemUpdate = (entity, vectorItem, dispatch) => {
+    const {__typename} = vectorItem
+    if (__typename === "VectorGQLModel") {
+        const {vectors, ...others} = entity
+        const newEntityVectorItems = vectors.map(item => item.id === vectorItem.id ? vectorItem : item)
+        const newEntity = {...others, vectors: newEntityVectorItems}
+        dispatch(ItemActions.item_update(newEntity));
+    } 
+}
+
+const followUpEntityVectorItemDelete = (entity, vectorItem, dispatch) => {
+    const {__typename} = vectorItem
+    if (__typename === "VectorGQLModel") {
+        const {vectors, ...others} = entity
+        const newEntityVectorItems = vectors.filter((item) => item.id !== vectorItem.id)
+        const newEntity = {...others, vectors: newEntityVectorItems}
+        dispatch(ItemActions.item_update(newEntity));
+    } 
+}
+
 export const UserData = ({user}) => {
     const {loading, error, fetch } = useAsyncAction(QueryGroupAsyncAction, {}, {deferred: true});
     const {loading: loadingInsert, error: errorInsert, fetch: fetchInsert} = useAsyncAction(MembeshipInsertAsyncAction, {}, {deferred: true});

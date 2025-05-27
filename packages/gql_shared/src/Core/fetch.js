@@ -1,3 +1,95 @@
+const pendingBatches = new Map();
+const BATCH_DELAY_MS = 50;
+
+/**
+ * Extracts a unique key to batch GraphQL queries.
+ * Only allows batching if:
+ * - the document is a single `query` operation,
+ * - the query has exactly one root field,
+ * - the variables contain an `id` value.
+ *
+ * @param {object} input - Object containing body, ast, operationName
+ * @returns {string|null} A batch key like "user|123", or null if not eligible
+ */
+function getBatchKey({ body, ast, operationName }) {
+  try {
+    const parsed = JSON.parse(body);
+    const id = parsed.variables?.id;
+
+    if (!id || !ast || !Array.isArray(ast.definitions)) return null;
+
+    // najdi hlavní operaci typu "query"
+    const opDef = ast.definitions.find(
+      (def) => def.kind === "OperationDefinition" && def.operation === "query"
+    );
+    if (!opDef || !Array.isArray(opDef.selectionSet?.selections)) return null;
+
+    const selections = opDef.selectionSet.selections;
+
+    // povoleno pouze pokud je 1 jediný root field
+    if (selections.length !== 1) return null;
+
+    const fieldName = selections[0]?.name?.value;
+    if (!fieldName) return null;
+
+    return `${fieldName}|${id}`;
+  } catch {
+    return null;
+  }
+}
+
+
+/**
+ * Enqueues a GraphQL request for batching by batch key.
+ * If no batch is pending, schedules one with delay.
+ *
+ * @param {string} batchKey - A unique key representing the batch group.
+ * @param {string} url - The URL to send the batched request to.
+ * @param {object} fetchParams - Full fetch parameters including headers and body.
+ * @returns {Promise<any>} A promise resolving to the batched fetch result.
+ */
+function enqueueBatchedRequest(batchKey, url, fetchParams) {
+    // console.log('enqueueBatchedRequest', batchKey)
+    return new Promise((resolve, reject) => {
+      if (!pendingBatches.has(batchKey)) {
+        pendingBatches.set(batchKey, {
+          requests: [],
+          timeout: setTimeout(async () => {
+            const batch = pendingBatches.get(batchKey);
+            pendingBatches.delete(batchKey);
+            let res;
+            try {
+              res = await fetch(url, fetchParams);
+              if (res.type === "opaqueredirect") {
+                  // Handle opaque redirect
+                  console.log("fetch got opaque redirect")
+                  for (const { resolve } of batch.requests) {
+                    resolve({errors: [{stage: "redirect", msg: "Opaque redirect", status: 302, original: res}]})
+                  }
+              }
+              const json = await res.json();
+              for (const { resolve } of batch.requests) {
+                resolve(json);
+              }
+            } catch (err) {
+              for (const { resolve, reject } of batch.requests) {
+                // reject(err);
+                resolve({
+                  errors: [
+                    { stage: "fetch", msg: err.message, status: res.status, original: res },
+                  ],
+                  })
+              }
+            }
+          }, BATCH_DELAY_MS),
+        });
+      }
+
+      pendingBatches.get(batchKey).requests.push({ resolve, reject });
+    });
+}
+
+
 /**
  * Wrapper function for `fetch` that provides an intermediary layer for server communication.
  * Allows customization of headers, body processing, and response handling with built-in support for default fetch parameters.
@@ -40,9 +132,11 @@ export const authorizedFetch2 = async (path, params = {}, options = {}) => {
                 'Content-Type': 'application/json',
             },
             cache: 'no-cache', // Cache control: no-cache, reload, force-cache, etc.
-            redirect: 'error', // Redirect behavior: manual, follow, error.
+            redirect: 'manual', // Redirect behavior: manual, follow, error.
         },
         overridenPath = '/api/gql', // Default to `/api/gql` unless overridden
+        ast = null,
+
     } = options;
 
     // Merge global fetch parameters with specific request parameters
@@ -58,16 +152,33 @@ export const authorizedFetch2 = async (path, params = {}, options = {}) => {
             fetchParams.body = fetchParams.body.replaceAll(': ID', ': UUID');
         }
     }
+    // console.log("starting batching")
+    const batchKey = getBatchKey({ body: fetchParams.body, ast });
+    if (batchKey) {
+        return enqueueBatchedRequest(batchKey, overridenPath, fetchParams);
+    } 
 
     // Perform the fetch request
     let fetchResponse = null
     let jsonResponse = null
+    // console.log("starting fetch")
     try {
         fetchResponse = await fetch(overridenPath, fetchParams)
-        jsonResponse = await fetchResponse.json()
+        if (fetchResponse.type === "opaqueredirect") {
+            // Handle opaque redirect
+            console.log("fetch got opaque redirect")
+            return {errors: [{stage: "redirect", msg: "Opaque redirect", status: 302, original: fetchResponse}]}
+        }
     } catch (error) {
         console.log("fetch got error ", error)
-        throw error
+        // throw error
+        return {errors: [{stage: "fetch", msg: error.message, status: fetchResponse.status, original: fetchResponse}]}
+    }
+    // console.log("fetch got response ", fetchResponse)
+    try {
+        jsonResponse = await fetchResponse.json()
+    } catch (error) {
+        return {errors: [{stage: "json", msg: error.message, status: fetchResponse.status, original: fetchResponse}]}
     }
     return jsonResponse
     // return 

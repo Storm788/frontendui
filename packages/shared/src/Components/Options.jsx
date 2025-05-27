@@ -51,7 +51,7 @@ import { AsyncComponent } from './AsyncComponent';
  *   );
  * };
  */
-export const Options = ({ asyncAction, params = {}, shouldFetch }) => {
+export const Options = ({ asyncAction, params = {}, shouldFetch, valueSelector=(option)=>(option?.name || option?.id) }) => {
     const { error, loading, fetch, entity, dispatchResult } = useAsyncAction(asyncAction, params, {deferred: true});
     
     useEffect(() => {
@@ -59,13 +59,14 @@ export const Options = ({ asyncAction, params = {}, shouldFetch }) => {
     }, [shouldFetch, asyncAction]
     )
 
-    console.log("Options.params", params)
+    // console.log("Options.params", params)
     let options = []
     if (entity?.id) {
         options = entity?.options || []
     } else {
         const result = dispatchResult?.data?.result
-        options = result?.options || []
+        options = result || []
+        // console.log("Options.result", options)
     }
     // console.log("Options", options, entity, dispatchResult)
     return (
@@ -74,7 +75,7 @@ export const Options = ({ asyncAction, params = {}, shouldFetch }) => {
             {error && <ErrorHandler errors={error} />}
             {options.map((option) => (
                 <option key={option?.id} value={option?.id}>
-                    {option?.name}
+                    {valueSelector(option)}
                 </option>
             ))}
         </>

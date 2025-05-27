@@ -2,79 +2,52 @@ import {
       createBrowserRouter,
       RouterProvider
 } from "react-router-dom";
-import { GroupRouterSegment, UserRouterSegment } from "@hrbolek/uoisfrontend-ug2";
-  
-// import { UserPage } from "@hrbolek/uoisfrontend-ug";
-// import { UserStudiesPage } from "@hrbolek/uoisfrontend-granting";
-// import { GroupPage } from "@hrbolek/uoisfrontend-ug";
-// import { AdmissionPage } from "../../../packages/admissions/src";
-// import { RequestTypePage, RequestCategoriesPage, RequestCategoryPage, RequestDesignPage, RequestPage, RequestsPage, RequestCreatePage } from "../../../packages/requests/src";
-// import { GroupCategoryEditPage } from "@hrbolek/uoisfrontend-ug/";
-// import { GroupEditPage } from "@hrbolek/uoisfrontend-ug";
+import { GroupRouterSegment as GroupRouterSegmentUG2, UserRouterSegment as UserRouterSegmentUG2 } from "@hrbolek/uoisfrontend-ug2";
+import { SchemaRouterSegment } from "@hrbolek/uoisfrontend-all";
 
-// const prefix = "/ug"
-// export const Routes = [
-//     {
-//         path: `/${prefix}/user/view/:id`,
-//         element: <UserPage />,
-//     },  
-//     {
-//       path: `/${prefix}/group/view/:id`,
-//       element: <GroupPage />,
-//     },  //GroupCategoryEditPage
-//     {
-//         path: `/${prefix}/group/edit/:id`,
-//         element: <GroupEditPage />,
-//     },  //GroupCategoryEditPage
-//     {
-//         path: `/${prefix}/groupcategory/edit/:id`,
-//         element: <GroupCategoryEditPage />,
-//     },  //GroupCategoryEditPage
-//     {
-//         path: `/admissions/admission/view/:id`,
-//         element: <AdmissionPage />
-//     },  
-//     {
-//         path: `/studies/user/view/:id`,
-//         element: <UserStudiesPage />
-//     },
-//     {
-//         path: `/requests/request/view/:id`,
-//         element: <RequestPage />
-//     },
-//     {
-//         path: `/requests/request/wizard`,
-//         element: <RequestCreatePage />
-//     },
-//     {
-//         path: `/requests/request/wizard/:id`,
-//         element: <RequestCreatePage />
-//     },
-//     {
-//         path: `/requests/request/design/:id`,
-//         element: <RequestDesignPage />
-//     },
-//     {
-//         path: `/requests/category/view/:id`,
-//         element: <RequestCategoryPage />
-//     },
-//     {
-//         path: `/requests/categories/view`,
-//         element: <RequestCategoriesPage />
-//     },
-//     {
-//         path: `/requests/type/view/:id`,
-//         element: <RequestTypePage />
-//     },
-//     {
-//         path: `/requests/all/view`,
-//         element: <RequestsPage />
-//     }
-// ]
+import { UserRouterSegments } from "@hrbolek/uoisfrontend-all";
+import { SchemaTypeRouterSegment } from "../../../packages/all/src/SchemaType/Pages/SchemaTypeRouterSegment";
+import { GroupRouterSegments } from "../../../packages/all/src/GroupGQLModel";
+import { StateMachineRouterSegments } from "../../../packages/all/src/StateMachineGQLModel";
+
+
+import { ProgramRouterSegments } from "../../../packages/all/src/ProgramGQLModel";
+import { SubjectRouterSegments } from "../../../packages/all/src/SubjectGQLModel";
+import { SemesterRouterSegments } from "../../../packages/all/src/SemesterGQLModel";
+import { StudentRouterSegments } from "../../../packages/all/src/StudentGQLModel";
+
+import { AdmissionRouterSegments } from "../../../packages/all/src/AdmissionGQLModel";
+import { PaymentInfoRouterSegments } from "../../../packages/all/src/PaymentInfoGQLModel";
+import { PaymentRouterSegments } from "../../../packages/all/src/PaymentGQLModel";
+
+import { StudyPlanRouterSegments } from "../../../packages/all/src/StudyPlanGQLModel";
+import { StudyPlanLessonRouterSegments } from "../../../packages/all/src/StudyPlanLessonGQLModel";
+import { StateRouterSegments } from "../../../packages/all/src/StateGQLModel";
+
 
 const Routes = [
-    UserRouterSegment,
-    GroupRouterSegment
+    UserRouterSegmentUG2,
+    GroupRouterSegmentUG2,
+    SchemaRouterSegment,
+    SchemaTypeRouterSegment,
+
+    ...UserRouterSegments,
+    ...GroupRouterSegments,
+    ...StateMachineRouterSegments,
+    ...StateRouterSegments,
+
+    ...ProgramRouterSegments,
+    ...SubjectRouterSegments,
+    ...SemesterRouterSegments,
+    
+    ...StudentRouterSegments,
+
+    ...AdmissionRouterSegments,
+    ...PaymentInfoRouterSegments,
+    ...PaymentRouterSegments,
+
+    ...StudyPlanRouterSegments,
+    ...StudyPlanLessonRouterSegments
 ]
 
 // const router = createBrowserRouter(Routes, {basename: "/ug"});

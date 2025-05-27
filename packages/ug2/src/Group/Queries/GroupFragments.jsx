@@ -33,6 +33,7 @@ fragment GroupLarge on GroupGQLModel {
       id
       name
       surname
+      fullname
       email
     }
   }

@@ -6,10 +6,18 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "create:component": "node scripts/createcomponent.js",
     "create:component2": "node scripts/createcomponent2.js",
+    "create:component3": "node scripts/createcomponent3.js",
+    "create:component4": "node scripts/createcomponent4.js",
     "create:scalar": "node scripts/createscalar.js",
     "create:vector": "node scripts/createvector.js",
+    "create:vectors4": "node scripts/createvectors4.js",
+    "create:scalars4": "node scripts/createscalars4.js",
+    "listtree": "node scripts/listTree.js",
+    "create:filter": "node scripts/generatefilterform.js",
+
     "build:apps": "npm workspaces foreach --include=apps/* npm run build",
     "publish:packages": "npm workspaces foreach --include=packages/* npm publish --access public"
+    
   },
   "keywords": [],
   "author": "",

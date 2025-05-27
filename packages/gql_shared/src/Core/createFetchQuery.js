@@ -1,3 +1,5 @@
+import { parse } from 'graphql';
+
 import { authorizedFetch2 } from "./fetch";
 import { createPayload } from './createPayload'
 /**
@@ -38,25 +40,36 @@ import { createPayload } from './createPayload'
  *   .then(response => console.log(response))
  *   .catch(err => console.error(err));
  */
-export const createFetchQuery = (query, params = {}) => async (query_variables) => {
+export const createFetchQuery = (query, params = {}) => {
     if (!query || typeof query !== 'string') {
         throw new Error('Invalid query: must be a non-empty string.');
     }
 
-    // Default fetch parameters
-    const defaultParams = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-    };
+    const ast = parse(query); // AST je vyroben hned
+    const operationNameNode = ast.definitions.find(d => d.kind === 'OperationDefinition' && d.name);
+    const operationName = operationNameNode?.name?.value || null;
 
-    const body = JSON.stringify(createPayload(query, query_variables));
-    try {
-        const result = await authorizedFetch2('', { body, ...defaultParams, ...params });
-        return result;
-    } catch (error) {
-        console.error("createAsyncGraphQLAction: Error during async action execution", error);
-        throw error;
-    }    
+    return async (query_variables) => {
+
+        // Default fetch parameters
+        const defaultParams = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        };
+
+        const body = JSON.stringify(createPayload(query, query_variables));
+        try {
+            const result = await authorizedFetch2('', { body, ...defaultParams, ...params }, {ast, operationName});
+            return result;
+        } catch (error) {
+            console.error("createAsyncGraphQLAction: Error during async action execution", error);
+            // throw error;
+            return {
+                errors: [{message: error.message, status: 500}],
+                data: null,
+            };
+        }    
+    }
 };

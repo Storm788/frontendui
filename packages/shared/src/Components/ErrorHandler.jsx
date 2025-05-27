@@ -19,7 +19,30 @@ export const ErrorHandler = ({ errors = "DEMO ERROR", show = true }) => {
     }
 
     if (!visible) return null
-
+    if (errors?.details?.[0]?.status === 302) {
+        return (
+        <Modal
+            show={show}
+            onHide={onClose}
+            centered
+            backdrop="static" // Prevent closing the modal by clicking outside
+            size="xl" // Adjust size as needed
+            aria-labelledby="error-handler-title"
+        >
+            <Modal.Header closeButton>
+                <Modal.Title id="error-handler-title">Chyba</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {errors?.details[0]?.status === 302 && <span>Nejste přihlášeni</span>}<br />
+            </Modal.Body>
+            <Modal.Footer>
+                <button className="btn btn-primary" onClick={onClose}>
+                    Zavřít
+                </button>
+            </Modal.Footer>
+        </Modal>            
+        )
+    }
     return (
         <Modal
             show={show}
@@ -39,6 +62,8 @@ export const ErrorHandler = ({ errors = "DEMO ERROR", show = true }) => {
                 {(errors?.name !== "GQLMutationError") &&
                     <ErrorDisplay errors={parsedErrors} onClose={onClose} />
                 }
+                <pre>{JSON.stringify(errors, null, 4)}</pre>
+                {errors?.details?.[0]?.status === 302 && <span>Nejste přihlášeni</span>}
             </Modal.Body>
             <Modal.Footer>
                 <button className="btn btn-primary" onClick={onClose}>
