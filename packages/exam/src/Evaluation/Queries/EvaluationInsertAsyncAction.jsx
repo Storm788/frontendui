@@ -3,9 +3,9 @@ import { EvaluationLargeFragment } from "./EvaluationFragments";
 
 const EvaluationInsertMutation = createQueryStrLazy(
 `
-mutation EvaluationInsertMutation($id: UUID, $name: String, $name_en: String) {
+mutation EvaluationInsertMutation($id: UUID, $studentId: UUID, $passed: Boolean, $grade: String, $points: Int) {
   result: evaluationInsert(
-    evaluation: {id: $id, name: $name, nameEn: $name_en}
+    evaluation: {id: $id, studentId: $studentId, passed: $passed, grade: $grade, points: $points}
   ) {
     ... on InsertError {
       failed

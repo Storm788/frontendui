@@ -2,6 +2,7 @@ import Row from "react-bootstrap/Row"
 import { LeftColumn, MiddleColumn } from "@hrbolek/uoisfrontend-shared"
 import { EvaluationCardCapsule } from "./EvaluationCardCapsule"
 import { EvaluationMediumCard } from "./EvaluationMediumCard"
+import { EvaluationDocumentList } from "./EvaluatianData"
 
 /**
  * A large card component for displaying detailed content and layout for an evaluation entity.
@@ -32,10 +33,12 @@ export const EvaluationLargeCard = ({evaluation, children}) => {
         <EvaluationCardCapsule evaluation={evaluation} >
             <Row>
                 <LeftColumn>
-                    Ahojky světe. <br/>
+                    <EvaluationDocumentList evaluation={evaluation} />
+                    <EvaluationMediumCard evaluation={evaluation}/>
+
                 </LeftColumn>
                 <MiddleColumn>
-                    <EvaluationMediumCard evaluation={evaluation}/>
+                    {children}
                 </MiddleColumn>
             </Row>
         </EvaluationCardCapsule>

@@ -25,9 +25,9 @@ export const EvaluationMediumContent = ({evaluation, children}) => {
     return (
         <>
         ID: {evaluation.id} <br/>
-        description: {evaluation.description} <br/>
-        grade: {evaluation.grade} <br/>
-        passed: False <br/>
+        Points: {evaluation.points} <br/>
+        Grade: {evaluation.grade} <br/>
+        Passed: {evaluation.passed} <br/>
         </>
     )
 }

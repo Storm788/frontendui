@@ -3,6 +3,8 @@ import { ButtonWithDialog, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfro
 // import { UpdateEvaluationButton } from "./CUDButtons/UpdateEvaluationButton";
 // import { DeleteEvaluationButton } from "./CUDButtons/DeleteEvaluationButton";
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
+import { EvaluationDeleteAsyncAction, EvaluationInsertAsyncAction, EvaluationUpdateAsyncAction } from "../Queries";
+import { EvaluationMediumEditableContent } from "./EvaluationMediumEditableContent";
 
 /**
  * EvaluationCUDButton Component
@@ -101,7 +103,14 @@ export const EvaluationButton = ({ operation, children, evaluation, onDone = () 
 
     const { error, loading, fetch, entity } = useAsyncAction(asyncAction, evaluation, { deferred: true });
     const handleClick = async (params = {}) => {
-        const fetchParams = { ...evaluation, ...params };
+        // Uživatelský vstup je již písmeno A-F, pouze jej převezmeme
+        const fetchParams = { 
+            ...evaluation, 
+            ...params, 
+            passed: params.passed == "on", 
+            grade: params.grade,
+            points: parseInt(params.points)
+        };
         const freshEvaluation = await fetch(fetchParams);
         onDone(freshEvaluation); // Pass the result to the external callback
     };

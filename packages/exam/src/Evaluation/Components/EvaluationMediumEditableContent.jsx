@@ -1,5 +1,6 @@
 import { Input } from "@hrbolek/uoisfrontend-shared"
 
+
 /**
  * A component that displays medium-level content for an evaluation entity.
  *
@@ -26,8 +27,9 @@ import { Input } from "@hrbolek/uoisfrontend-shared"
 export const EvaluationMediumEditableContent = ({evaluation, onChange=(e)=>null, onBlur=(e)=>null, children}) => {
     return (
         <>           
-            <Input id={"name"} label={"Název"} className="form-control" defaultValue={evaluation?.name|| "Název"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"name_en"} label={"Anglický název"} className="form-control" defaultValue={evaluation?.name_en|| "Anglický název"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"points"} label={"Body"} className="form-control" defaultValue={evaluation?.points|| "0-100"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"grade"} label={"Známka"} className="form-control" defaultValue={evaluation?.grade|| "A-F"} onChange={onChange} onBlur={onBlur}/>
+            <Input id={"passed"} label={"Výsledek zkoušky"} type="checkbox" className="form-check-input" defaultChecked={evaluation?.passed|| false} onChange={onChange} onBlur={onBlur} />
             {children}
         </>
     )

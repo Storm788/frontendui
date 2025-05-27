@@ -1,9 +1,8 @@
 import { useState } from "react"
 import { useParams } from "react-router"
-
+import { EvaluationButton, EvaluationLargeCard } from "../Components"
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
-import { EvaluationLargeCard } from "../Components"
 import { EvaluationReadAsyncAction } from "../Queries"
 import { EvaluationPageNavbar } from "./EvaluationPageNavbar"
 
@@ -27,19 +26,13 @@ import { EvaluationPageNavbar } from "./EvaluationPageNavbar"
  * 
  * <EvaluationPageContent evaluation={evaluationEntity} />
  */
-export const placeholder_data = {
-        "id" : "8e157256-16c0-461b-a3f8-a5419cee2a5b",
-        "name": "Pepovo hodnocení zkoušky z brainrotu",
-        "description": "Hodina byla očividně příliš složitá nebo příliš brzo ráno.",
-        "grade": "F",
-        "passed": false,
-}
 
-const EvaluationPageContent = ({evaluation}) => {
+const EvaluationPageContent = ({ evaluation }) => {
     return (<>
-        <EvaluationPageNavbar evaluation={placeholder_data} />
-        <EvaluationLargeCard evaluation={placeholder_data}>
-            Evaluation {JSON.stringify(placeholder_data)}
+        <EvaluationPageNavbar evaluation={evaluation} />
+        <EvaluationLargeCard evaluation={evaluation}>
+            Exam {JSON.stringify(evaluation)} <br />
+            <EvaluationButton evaluation={{}} operation="C" className="btn btn-warning" onDone={(data)=>console.log(data)}>Insert</EvaluationButton> <br />
         </EvaluationLargeCard>
     </>)
 }
@@ -110,5 +103,5 @@ export const EvaluationPage = () => {
     const {id} = useParams()
     const evaluation = {id}
 
-    return <EvaluationPageContent evaluation={placeholder_data} />
+    return <EvaluationPageContentLazy evaluation={evaluation} />
 }

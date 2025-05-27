@@ -9,11 +9,11 @@ import { EvaluationPage, EvaluationRouterSegment } from "C:/Users/kryst/source/r
 
 export const Routes = [
     {
-        path: `/zk/:id`,
+        path: `/exampage/exam/view/:id`,
         element: <ExamPage />,
     },
     {
-        path: `/pepa/:id`,
+        path: `/exampage/evaluation/view/:id`,
         element: <EvaluationPage/>
     },
     ExamRouterSegment,
