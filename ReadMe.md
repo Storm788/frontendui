@@ -22,4 +22,4 @@ První kroky k pochopení fungování programu, zatím pracujeme spolu na jednom
 ### Druhý commit:
 Soon to be! Snad! Update 15.5.2025 se mi podarilo vyresit problem s commitovanim
 #### Problémy:
-Nepodařilo se nám to nahrát na git. Žádná data v dadbázi.
+Nepodařilo se nám to nahrát na git. Žádná data v dadbázi. Problém s vytvořením DeleteAsyncAction
