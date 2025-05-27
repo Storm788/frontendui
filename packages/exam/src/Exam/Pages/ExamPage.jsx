@@ -36,7 +36,7 @@ const ExamPageContent = ({ exam }) => {
         <ExamLargeCard exam={exam}>
             Exam {JSON.stringify(exam)} <br />
             {/* <ExamButton exam={exam} operation="C">Insert</ExamButton> <br /> */}
-            <ExamButton exam={exam} operation="U">Update</ExamButton><br />
+            <ExamButton exam={exam} operation="U" className = "btn btn-success">Update</ExamButton><br />
             {/* <ExamButton exam={exam} operation="D">Delete</ExamButton><br /> */}
         </ExamLargeCard>
     </>)

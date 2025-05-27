@@ -35,10 +35,11 @@ export const ExamLargeCard = ({exam, children}) => {
         <ExamCardCapsule exam={exam} >
             <Row>
                 <LeftColumn>
-                    <ExamMediumCard exam={exam}/>
+                   <ExamMediumCard exam={exam}/>
+                   
                 </LeftColumn>
                 <MiddleColumn>
-                {...children}
+                {children}
                
                 </MiddleColumn>
             </Row>
