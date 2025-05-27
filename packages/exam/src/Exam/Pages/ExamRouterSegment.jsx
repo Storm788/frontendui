@@ -14,6 +14,6 @@ import { ExamPage } from "./ExamPage"
  * @property {JSX.Element} element - The React element (component) to render, in this case, <ExamPage />.
  */
 export const ExamRouterSegment = {
-    path: `/${ExamURI}/:id`,
+    path: `/${ExamURI}:id`,
     element: <ExamPage />,
 }

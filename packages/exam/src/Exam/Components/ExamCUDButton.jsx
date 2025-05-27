@@ -1,8 +1,7 @@
 import { ButtonWithDialog, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared";
-// import { InsertExamButton } from "./CUDButtons/InsertExamButton";
-// import { UpdateExamButton } from "./CUDButtons/UpdateExamButton";
-// import { DeleteExamButton } from "./CUDButtons/DeleteExamButton";
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
+import { ExamDeleteAsyncAction, ExamInsertAsyncAction, ExamUpdateAsyncAction } from "../Queries";
+import { ExamMediumEditableContent } from "./ExamMediumEditableContent";
 
 /**
  * ExamCUDButton Component
@@ -101,7 +100,7 @@ export const ExamButton = ({ operation, children, exam, onDone = () => {}, ...pr
 
     const { error, loading, fetch, entity } = useAsyncAction(asyncAction, exam, { deferred: true });
     const handleClick = async (params = {}) => {
-        const fetchParams = { ...exam, ...params };
+        const fetchParams = { ...exam, ...params, minScore: parseInt(params?.minScore), maxScore: parseInt(params?.maxScore), lastchange: exam.lastchange };
         const freshExam = await fetch(fetchParams);
         onDone(freshExam); // Pass the result to the external callback
     };

@@ -3,9 +3,9 @@ import { ExamLargeFragment } from "./ExamFragments";
 
 const ExamUpdateMutation = createQueryStrLazy(
 `
-mutation ExamUpdateMutation($id: UUID!, $lastchange: DateTime!, $name: String, $name_en: String) {
+mutation ExamUpdateMutation($id: UUID!, $lastchange: DateTime!, $name: String, $name_en: String, $maxScore: Int, $minScore: Int) {
   result: examUpdate(
-    exam: {id: $id, lastchange: $lastchange, name: $name, nameEn: $name_en}
+    exam: {id: $id, lastchange: $lastchange, name: $name, nameEn: $name_en, maxScore: $maxScore, minScore: $minScore}
   ) {
     ... on ExamGQLModelUpdateError {
       failed

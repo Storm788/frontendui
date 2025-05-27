@@ -1,8 +1,9 @@
 # This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
 # For more information see: https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-
+# Workflow name
 name: publish Node.js Package
 
+# Trigger on release creation or manual dispatch
 on:
   release:
     types: [created]
@@ -13,9 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the repository code
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      # Step 2: Setup Node.js environment with npm registry and caching
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -23,13 +26,17 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
 
+      # Step 3: Install dependencies using npm ci for clean install
       - name: Install dependencies
         run: npm ci
 
+      # Step 4: Build all apps
       - name: Build Apps
         run: npm run build:apps
 
+      # Step 5: Publish packages to npm registry
       - name: Publish Packages
         run: npm run publish:packages
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.STORM788 }}
+

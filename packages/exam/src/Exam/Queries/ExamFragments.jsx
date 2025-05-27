@@ -13,6 +13,7 @@ export const ExamMediumFragment = createQueryStrLazy(
 `
 fragment ExamMedium on ExamGQLModel {
   ...ExamLink
+  lastchange
 }
 `, ExamLinkFragment)
 

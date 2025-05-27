@@ -35,11 +35,10 @@ export const ExamLargeCard = ({exam, children}) => {
         <ExamCardCapsule exam={exam} >
             <Row>
                 <LeftColumn>
-                  Připravte se na proud myšlenek, které nedávají smysl. V tomto předmětu je vše možné – kromě pochopení látky. <br/>
-
+                    <ExamMediumCard exam={exam}/>
                 </LeftColumn>
                 <MiddleColumn>
-                <ExamMediumCard exam={exam}/>
+                {...children}
                
                 </MiddleColumn>
             </Row>

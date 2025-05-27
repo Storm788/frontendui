@@ -30,15 +30,14 @@ import { ExamPageNavbar } from "./ExamPageNavbar"
 
 
 
-const ExamPageContent = ({exam}) => {
+const ExamPageContent = ({ exam }) => {
     return (<>
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
-            Exam {JSON.stringify(exam)}
-            <ExamData exam={exam} />
-        <ExamButton exam={exam} operation="C">Insert</ExamButton>
-        <ExamButton exam={exam} operation="U">Update</ExamButton>
-        <ExamButton exam ={exam} operation="D">Delete</ExamButton>
+            Exam {JSON.stringify(exam)} <br />
+            {/* <ExamButton exam={exam} operation="C">Insert</ExamButton> <br /> */}
+            <ExamButton exam={exam} operation="U">Update</ExamButton><br />
+            {/* <ExamButton exam={exam} operation="D">Delete</ExamButton><br /> */}
         </ExamLargeCard>
     </>)
 }
@@ -65,17 +64,17 @@ const ExamPageContent = ({exam}) => {
  *
  * <ExamPageContentLazy exam={examId} />
  */
-const ExamPageContentLazy = ({exam}) => {
+const ExamPageContentLazy = ({ exam }) => {
     const { error, loading, entity, fetch } = useAsyncAction(ExamReadAsyncAction, exam)
     const [delayer] = useState(() => CreateDelayer())
 
-    const handleChange = async(e) => {
+    const handleChange = async (e) => {
         // console.log("GroupCategoryPageContentLazy.handleChange.e", e)
         const data = e.target.value
         const serverResponse = await delayer(() => fetch(data))
         // console.log("GroupCategoryPageContentLazy.serverResponse", serverResponse)
     }
-    const handleBlur = async(e) => {
+    const handleBlur = async (e) => {
         // console.log("GroupCategoryPageContentLazy.handleBlur.e", e)
         const data = e.target.value
         const serverResponse = await delayer(() => fetch(data))
@@ -85,7 +84,7 @@ const ExamPageContentLazy = ({exam}) => {
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <ExamPageContent exam={entity}  onChange={handleChange} onBlur={handleBlur} />}
+        {entity && <ExamPageContent exam={entity} onChange={handleChange} onBlur={handleBlur} />}
     </>)
 }
 
@@ -106,9 +105,9 @@ const ExamPageContentLazy = ({exam}) => {
  * // Navigating to "/exam/12345" will render the page for the exam entity with ID 12345.
  */
 export const ExamPage = () => {
-    const {id} = useParams()
-    const exam = {id}
-    
+    const { id } = useParams()
+    const exam = { id }
+
     return <ExamPageContentLazy exam={exam} />
     //return <ExamPageContent exam={placeholder_data} />
 }
