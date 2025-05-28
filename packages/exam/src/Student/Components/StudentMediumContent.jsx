@@ -26,7 +26,9 @@ export const StudentMediumContent = ({student, children}) => {
         <>
             ID: {student.id} <br/>
             SemesterNumber: {student.semesterNumber} <br/>
-            
+            ProgramId: {student.programId} <br/>
+            StateId: {student.stateId} <br/>
+            UserId: {student.userId} <br/>
             {children}
         </>
     )

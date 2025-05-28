@@ -81,7 +81,7 @@ const EvaluationPageContentLazy = ({evaluation}) => {
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <EvaluationPageContent evaluation={entity} studs={studsDispatchResult?.data.result || []}  onChange={handleChange} onBlur={handleBlur} />}
+        {entity && <EvaluationPageContent evaluation={entity} onChange={handleChange} onBlur={handleBlur} />}
     </>)
 }
 
