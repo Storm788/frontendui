@@ -31,11 +31,7 @@ const StudentPageContent = ({student}) => {
     return (<>
         <StudentPageNavbar student={student} />
         <StudentLargeCard student={student}>
-            Student {JSON.stringify(student)}
-            <StudentButton student={{}} operation="C" className="btn btn-warning" onDone={(data)=>console.log(data)}>Insert</StudentButton> <br />
-            <StudentButton student={student} operation="U" className="btn btn-success">Update</StudentButton><br />
-            <StudentButton student={student} operation="D" className="btn btn-danger">Delete</StudentButton><br />
-                    
+            Student {JSON.stringify(student)}                    
         </StudentLargeCard>
     </>)
 }

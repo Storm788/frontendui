@@ -6,6 +6,9 @@ import { ExamButton, ExamLargeCard } from "../Components"
 import { ExamReadAsyncAction } from "../Queries"
 import { ExamPageNavbar } from "./ExamPageNavbar"
 import { StudentList } from "../../Student/Components/StudentData"
+import { EvaluationList } from "../../Evaluation/Components/EvaluatianData"
+import { EvaluationReadPageAsyncAction } from "../../Evaluation/Queries/EvaluationReadPageAsyncAction"
+
 /**
  * A page content component for displaying detailed information about an exam entity.
  *
@@ -29,12 +32,12 @@ import { StudentList } from "../../Student/Components/StudentData"
 
 
 
-const ExamPageContent = ({ exam }) => {
+const ExamPageContent = ({ exam, evals }) => {
     return (<>
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
             Exam {JSON.stringify(exam)} <br />
-            <StudentList/>
+            <EvaluationList evaluations={evals} />
         </ExamLargeCard>
     </>)
 }
@@ -63,6 +66,9 @@ const ExamPageContent = ({ exam }) => {
  */
 const ExamPageContentLazy = ({ exam }) => {
     const { error, loading, entity, fetch } = useAsyncAction(ExamReadAsyncAction, exam)
+    const { error: evalsError, loading: evalsLoading, dispatchResult: evalsDispatchResult, fetch: evalFetch }
+        = useAsyncAction(EvaluationReadPageAsyncAction, { where: { exam_id: { _eq: exam.id } } })
+    console.log(evalsDispatchResult)
     const [delayer] = useState(() => CreateDelayer())
 
     const handleChange = async (e) => {
@@ -81,7 +87,7 @@ const ExamPageContentLazy = ({ exam }) => {
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <ExamPageContent exam={entity} onChange={handleChange} onBlur={handleBlur} />}
+        {entity && <ExamPageContent exam={entity} evals={evalsDispatchResult?.data.result || []} onChange={handleChange} onBlur={handleBlur} />}
     </>)
 }
 

@@ -5,22 +5,13 @@ import { ListGroup } from "react-bootstrap"
 import { EvaluationReadPageAsyncAction } from "../Queries/EvaluationReadPageAsyncAction"
 
 
-export const EvaluationDocumentList = ({ }) => {
-    const { dispatchResult, loading, error } = useAsyncAction(EvaluationReadPageAsyncAction, {})
-
-
-    if (loading) {
-        return <LoadingSpinner />
-    }
-    if (error) {
-        return <ErrorHandler errors={error} />
-    }
-
+export const EvaluationList = ({ evaluations }) => {
     return (
         <ListGroup>
-            {dispatchResult.data.result.map(evaluation => (
+            {evaluations.map(evaluation => (
                 <ListGroup.Item key={evaluation.id}>
                     <EvaluationLink evaluation={evaluation} />
+                    {/* <StudentButton student={student} operation="U" className="btn btn-success">Update</StudentButton><br />*/}
                 </ListGroup.Item>
             ))}
         </ListGroup>
