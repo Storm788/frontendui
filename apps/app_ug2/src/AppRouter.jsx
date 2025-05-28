@@ -1,11 +1,11 @@
 
-import { ProgramPage, ProgramRouterSegment, SubjectRouterSegment } from "@hrbolek/uoisfrontend-zp";
 import {
       createBrowserRouter,
       RouterProvider
 } from "react-router-dom";
 import { ExamPage, ExamRouterSegment} from "../../../packages/exam/src";
-import { EvaluationPage, EvaluationRouterSegment } from "C:/Users/kryst/source/repos/stefek1/frontendui/packages/exam/src/Evaluation";
+import { EvaluationPage, EvaluationRouterSegment } from "../../../packages/exam/src/Evaluation";
+import { StudentPage, StudentRouterSegment } from "../../../packages/exam/src/Student";
 
 export const Routes = [
     {
@@ -16,8 +16,13 @@ export const Routes = [
         path: `/exampage/evaluation/view/:id`,
         element: <EvaluationPage/>
     },
+    {
+        path: `/exampage/student/view/:id`,
+        element: <StudentPage/>
+    },
     ExamRouterSegment,
-    EvaluationRouterSegment
+    EvaluationRouterSegment,
+    StudentRouterSegment,
 ]
 
 // const router = createBrowserRouter(Routes, {basename: "/ug"});

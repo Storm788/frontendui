@@ -28,6 +28,7 @@ export const EvaluationMediumContent = ({evaluation, children}) => {
         Points: {evaluation.points} <br/>
         Grade: {evaluation.grade} <br/>
         Passed: {evaluation.passed} <br/>
+        {children}
         </>
     )
 }
