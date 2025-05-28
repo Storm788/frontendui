@@ -5,7 +5,7 @@ import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
 import { ExamButton, ExamLargeCard } from "../Components"
 import { ExamReadAsyncAction } from "../Queries"
 import { ExamPageNavbar } from "./ExamPageNavbar"
-
+import { StudentList } from "../../Student/Components/StudentData"
 /**
  * A page content component for displaying detailed information about an exam entity.
  *
@@ -34,7 +34,7 @@ const ExamPageContent = ({ exam }) => {
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
             Exam {JSON.stringify(exam)} <br />
-            
+            <StudentList/>
         </ExamLargeCard>
     </>)
 }

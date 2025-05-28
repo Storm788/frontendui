@@ -100,7 +100,6 @@ export const StudentButton = ({ operation, children, student, onDone = () => {},
 
     const { error, loading, fetch, entity } = useAsyncAction(asyncAction, student, { deferred: true });
     const handleClick = async (params = {}) => {
-        console.log(params);
         // Extract relevant fields from the student object
         const fetchParams = {
             ...student,
@@ -108,8 +107,6 @@ export const StudentButton = ({ operation, children, student, onDone = () => {},
             studentId: student?.id,
             semesterNumber: student?.semesterNumber ? parseInt(student.semesterNumber) : undefined,
             userId: student?.userId || student?.user?.id,
-            programId: student?.programId || student?.program?.id,
-            stateId: student?.stateId || student?.state?.id
         };
         const freshStudent = await fetch(fetchParams);
         onDone(freshStudent); // Pass the result to the external callback

@@ -8,8 +8,6 @@ fragment StudentLink on StudentGQLModel {
   lastchange
   semesterNumber
   userId
-  programId
-  stateId
 }
 `)
 

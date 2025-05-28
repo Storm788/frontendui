@@ -3,8 +3,8 @@ import { StudentLargeFragment } from "./StudentFragments";
 
 const StudentInsertMutation = createQueryStrLazy(
 `
-mutation studentInsert($id: UUID, $semesterNumber: Int, $userId: UUID!, $programId: UUID!, $stateId: UUID!) {
-  studentInsert(student: {id: $id, semesterNumber: $semesterNumber, userId: $userId, programId: $programId, stateId: $stateId}) {
+mutation studentInsert($id: UUID, $semesterNumber: Int, $userId: UUID!) {
+  studentInsert(student: {id: $id, semesterNumber: $semesterNumber, userId: $userId}) {
     ... on InsertError {
       failed
       msg

@@ -1,28 +1,20 @@
-import { ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
-import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
 import { StudentLink } from "."
 import { ListGroup } from "react-bootstrap"
-import { StudentReadPageAsyncAction } from "../Queries/StudentReadPageAsyncAction"
+import { StudentButton } from "."
 
-
-export const StudentDocumentList = ({ }) => {
-    const { dispatchResult, loading, error } = useAsyncAction(StudentReadPageAsyncAction, {})
-
-
-    if (loading) {
-        return <LoadingSpinner />
-    }
-    if (error) {
-        return <ErrorHandler errors={error} />
-    }
-
+export const StudentList = ({ students }) => {
     return (
         <ListGroup>
-            {dispatchResult.data.result.map(student => (
+            {students.map(student => (
                 <ListGroup.Item key={student.id}>
                     <StudentLink student={student} />
+                    {/* <StudentButton student={student} operation="U" className="btn btn-success">Update</StudentButton><br />
+                    <StudentButton student={student} operation="D" className="btn btn-danger">Delete</StudentButton><br /> */}
                 </ListGroup.Item>
             ))}
+            {/* <ListGroup.Item>
+                <StudentButton student={{}} operation="C" className="btn btn-warning">Insert</StudentButton>
+            </ListGroup.Item> */}
         </ListGroup>
     )
 }
