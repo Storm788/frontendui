@@ -29,7 +29,6 @@ import { ExamMediumCard } from "./ExamMediumCard"
  */
 
 import { ExamEvaluationAttribute } from "../Scalars/ExamEvaluationAttrbibute"
-import { ExamDocumentList } from "./ExamData"
 
 export const ExamLargeCard = ({exam, children}) => {
     return (
@@ -37,7 +36,6 @@ export const ExamLargeCard = ({exam, children}) => {
             <Row>
                 <LeftColumn>
                    <ExamMediumCard exam={exam}/>
-                   <ExamDocumentList exam={exam} />
                 </LeftColumn>
                 <MiddleColumn>
                 {children}

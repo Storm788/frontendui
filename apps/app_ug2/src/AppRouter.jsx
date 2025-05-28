@@ -3,7 +3,7 @@ import {
       createBrowserRouter,
       RouterProvider
 } from "react-router-dom";
-import { ExamPage, ExamRouterSegment} from "../../../packages/exam/src";
+import { ExamListPage, ExamPage, ExamRouterSegment} from "../../../packages/exam/src";
 import { EvaluationPage, EvaluationRouterSegment } from "../../../packages/exam/src/Evaluation";
 import { StudentPage, StudentRouterSegment } from "../../../packages/exam/src/Student";
 
@@ -19,6 +19,10 @@ export const Routes = [
     {
         path: `/exampage/student/view/:id`,
         element: <StudentPage/>
+    },
+    {
+        path: '/exampage/examlistpage/view/',
+        element: <ExamListPage/>
     },
     ExamRouterSegment,
     EvaluationRouterSegment,

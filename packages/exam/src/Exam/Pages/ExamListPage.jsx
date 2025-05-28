@@ -5,7 +5,8 @@ import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
 import { ExamButton, ExamLargeCard } from "../Components"
 import { ExamReadAsyncAction } from "../Queries"
 import { ExamPageNavbar } from "./ExamPageNavbar"
-import { ExamData } from "../Components/ExamData"
+import { ExamList } from "../Components/ExamData"
+import { ExamReadPageAsyncAction } from "../Queries/ExamReadPageAsyncAction"
 /**
  * A page content component for displaying detailed information about an exam entity.
  *
@@ -29,13 +30,13 @@ import { ExamData } from "../Components/ExamData"
 
 
 
-const ExamListPageContent = ({ exam }) => {
+const ExamListPageContent = ({ exams }) => {
     return (<>
-        <ExamPageNavbar exam={exam} />
-        <ExamLargeCard exam={exam}>
-            Exam {JSON.stringify(exam)} <br />
-            <ExamData exam={exam} />
-        </ExamLargeCard>
+        {/* <ExamPageNavbar exam={exams} /> */}
+        {/* <ExamLargeCard exam={exams}> */}
+            Exams {JSON.stringify(exams)} <br />
+            <ExamList exams={exams} />
+        {/* </ExamLargeCard> */}
     </>)
 }
 
@@ -61,9 +62,10 @@ const ExamListPageContent = ({ exam }) => {
  *
  * <ExamPageContentLazy exam={examId} />
  */
-const ExamPageContentLazy = ({ exam }) => {
-    const { error, loading, entity, fetch } = useAsyncAction(ExamReadAsyncAction, exam)
+const ExamListPageContentLazy = ({ }) => {
+    const { error, loading, dispatchResult, fetch } = useAsyncAction(ExamReadPageAsyncAction,{})
     const [delayer] = useState(() => CreateDelayer())
+    console.log(dispatchResult)
 
     const handleChange = async (e) => {
         // console.log("GroupCategoryPageContentLazy.handleChange.e", e)
@@ -81,7 +83,7 @@ const ExamPageContentLazy = ({ exam }) => {
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <ExamListPageContent exam={entity} onChange={handleChange} onBlur={handleBlur} />}
+        {dispatchResult && <ExamListPageContent exams={dispatchResult.data.result} onChange={handleChange} onBlur={handleBlur} />}
     </>)
 }
 
@@ -102,9 +104,7 @@ const ExamPageContentLazy = ({ exam }) => {
  * // Navigating to "/exam/12345" will render the page for the exam entity with ID 12345.
  */
 export const ExamListPage = () => {
-    const { id } = useParams()
-    const exam = { id }
+    
 
-    return <ExamPageContentLazy exam={exam} />
-    //return <ExamPageContent exam={placeholder_data} />
+    return <ExamListPageContentLazy />
 }
