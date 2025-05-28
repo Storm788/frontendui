@@ -28,7 +28,6 @@ import { ExamMediumCard } from "./ExamMediumCard"
  * </ExamLargeCard>
  */
 
-import { ExamEvaluationAttribute } from "../Scalars/ExamEvaluationAttrbibute"
 
 export const ExamLargeCard = ({exam, children}) => {
     return (

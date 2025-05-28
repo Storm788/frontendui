@@ -34,9 +34,7 @@ const ExamPageContent = ({ exam }) => {
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
             Exam {JSON.stringify(exam)} <br />
-            <ExamButton exam={{}} operation="C" className="btn btn-warning" onDone={(data)=>console.log(data)}>Insert</ExamButton> <br />
-            <ExamButton exam={exam} operation="U" className="btn btn-success">Update</ExamButton><br />
-            <ExamButton exam={exam} operation="D" className="btn btn-danger">Delete</ExamButton><br />
+            
         </ExamLargeCard>
     </>)
 }
