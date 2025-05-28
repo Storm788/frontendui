@@ -5,6 +5,8 @@ import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfronte
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
 import { EvaluationReadAsyncAction } from "../Queries"
 import { EvaluationPageNavbar } from "./EvaluationPageNavbar"
+import { StudentList } from "../../Student/Components/StudentData"
+import { StudentReadPageAsyncAction } from "../../Student/Queries/StudentReadPageAsyncAction"
 
 /**
  * A page content component for displaying detailed information about an evaluation entity.
@@ -32,7 +34,7 @@ const EvaluationPageContent = ({ evaluation }) => {
         <EvaluationPageNavbar evaluation={evaluation} />
         <EvaluationLargeCard evaluation={evaluation}>
             Exam {JSON.stringify(evaluation)} <br />
-            <EvaluationButton evaluation={{}} operation="C" className="btn btn-warning" onDone={(data)=>console.log(data)}>Insert</EvaluationButton> <br />
+            <StudentList students= {evaluation.students} />
         </EvaluationLargeCard>
     </>)
 }
@@ -79,7 +81,7 @@ const EvaluationPageContentLazy = ({evaluation}) => {
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <EvaluationPageContent evaluation={entity}  onChange={handleChange} onBlur={handleBlur} />}
+        {entity && <EvaluationPageContent evaluation={entity} studs={studsDispatchResult?.data.result || []}  onChange={handleChange} onBlur={handleBlur} />}
     </>)
 }
 

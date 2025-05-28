@@ -10,6 +10,11 @@ fragment EvaluationLink on EvaluationGQLModel {
   points
   grade
   passed
+  student {
+    student {
+      fullname
+    }
+  }
 }
 `)
 

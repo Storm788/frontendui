@@ -8,6 +8,7 @@ import { ExamPageNavbar } from "./ExamPageNavbar"
 import { StudentList } from "../../Student/Components/StudentData"
 import { EvaluationList } from "../../Evaluation/Components/EvaluatianData"
 import { EvaluationReadPageAsyncAction } from "../../Evaluation/Queries/EvaluationReadPageAsyncAction"
+import { Card, Row, Col, Badge } from "react-bootstrap"
 
 /**
  * A page content component for displaying detailed information about an exam entity.
