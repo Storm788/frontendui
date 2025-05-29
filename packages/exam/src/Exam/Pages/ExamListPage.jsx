@@ -32,7 +32,7 @@ import { ExamReadPageAsyncAction } from "../Queries/ExamReadPageAsyncAction"
 
 const ExamListPageContent = ({ exams }) => {
     return (<>
-        {/* <ExamPageNavbar exam={exams} /> */}
+        <ExamPageNavbar exam={exams} />
         {/* <ExamLargeCard exam={exams}> */}
             Exams {JSON.stringify(exams)} <br />
             <ExamList exams={exams} />
