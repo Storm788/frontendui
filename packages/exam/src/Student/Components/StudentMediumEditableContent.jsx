@@ -27,9 +27,9 @@ export const StudentMediumEditableContent = ({student, onChange=(e)=>null, onBlu
     return (
         <>           
             <Input id={"semesterNumber"} label={"Semester"} className="number" defaultValue={student?.semesterNumber|| "Číslo semestru"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"UserId"} label={"ID uživatele"} className="number" defaultValue={student?.userId|| "ID uživatele"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"programId"} label={"ID programu"} className="number" defaultValue={student?.programId|| "ID programu"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"stateId"} label={"ID stavu"} className="number" defaultValue={student?.stateId|| "ID stavu"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"UserId"} label={"ID uživatele"} className="number" defaultValue={student?.userId|| "UserId"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"programId"} label={"ID programu"} className="number" defaultValue={student?.programId|| "ProgramId"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"stateId"} label={"ID stavu"} className="number" defaultValue={student?.stateId|| "StateId"} onChange={onChange} onBlur={onBlur} />
             {children}
         </>
     )

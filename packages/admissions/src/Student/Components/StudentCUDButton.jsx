@@ -71,20 +71,20 @@ export const StudentButton = ({ operation, children, student, onDone = () => {},
     const operationConfig = {
         C: {
             asyncAction: StudentInsertAsyncAction,
-            dialogTitle: "Vložit novou student",
-            loadingMsg: "Vkládám novou student",
+            dialogTitle: "Vložit nového studenta",
+            loadingMsg: "Vkládám nového studenta",
             renderContent: () => <StudentMediumEditableContent student={student} />,
         },
         U: {
             asyncAction: StudentUpdateAsyncAction,
-            dialogTitle: "Upravit student",
-            loadingMsg: "Ukládám student",
+            dialogTitle: "Upravit studenta",
+            loadingMsg: "Ukládám studenta",
             renderContent: () => <StudentMediumEditableContent student={student} />,
         },
         D: {
             asyncAction: StudentDeleteAsyncAction,
-            dialogTitle: "Chcete odebrat student?",
-            loadingMsg: "Odstraňuji student",
+            dialogTitle: "Chcete odebrat studenta?",
+            loadingMsg: "Odstraňuji studenta",
             renderContent: () => (
                 <h2>
                     {student?.name} ({student?.name_en})

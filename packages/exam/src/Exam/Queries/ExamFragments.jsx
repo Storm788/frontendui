@@ -25,6 +25,22 @@ fragment ExamLarge on ExamGQLModel {
   name
   maxScore
   minScore
+  evaluations {
+    id
+    lastchange
+    points
+    passed
+    grade
+    student {
+      id
+      semesterNumber
+      student {
+        name
+        surname
+        email
+      }
+    }
+  }
 }
 `, ExamMediumFragment)
   

@@ -6,7 +6,6 @@ import { ExamButton, ExamLargeCard } from "../Components"
 import { ExamReadAsyncAction } from "../Queries"
 import { ExamPageNavbar } from "./ExamPageNavbar"
 import { StudentList } from "../../Student/Components/StudentData"
-import { EvaluationList } from "../../Evaluation/Components/EvaluatianData"
 import { EvaluationReadPageAsyncAction } from "../../Evaluation/Queries/EvaluationReadPageAsyncAction"
 import { Card, Row, Col, Badge } from "react-bootstrap"
 
@@ -33,12 +32,21 @@ import { Card, Row, Col, Badge } from "react-bootstrap"
 
 
 
-const ExamPageContent = ({ exam, evals }) => {
+const ExamPageContent = ({ exam, students }) => {
     return (<>
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
-            Exam {JSON.stringify(exam)} <br />
-            <EvaluationList evaluations={evals} />
+            <Row>
+                <Col>
+                    {/* Obalující karta pro seznam studentů */}
+                    <Card>
+                        {/* Tělo karty bez vnitřního odsazení pro lepší vzhled seznamu */}
+                        <Card.Body className="p-0">
+                            <StudentList students={students} />
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
         </ExamLargeCard>
     </>)
 }
