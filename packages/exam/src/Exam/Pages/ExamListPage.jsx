@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { data, useParams } from "react-router"
+import { useParams } from "react-router"
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
 import { ExamButton, ExamLargeCard } from "../Components"
@@ -7,6 +7,8 @@ import { ExamReadAsyncAction } from "../Queries"
 import { ExamPageNavbar } from "./ExamPageNavbar"
 import { ExamList } from "../Components/ExamData"
 import { ExamReadPageAsyncAction } from "../Queries/ExamReadPageAsyncAction"
+import { Card, Row, Col, Form, InputGroup, Container, Button } from "react-bootstrap"
+import { Search } from "react-bootstrap-icons"
 /**
  * A page content component for displaying detailed information about an exam entity.
  *
@@ -28,16 +30,58 @@ import { ExamReadPageAsyncAction } from "../Queries/ExamReadPageAsyncAction"
  * <ExamPageContent exam={examEntity} />
  */
 
+const ExamListPageContent = ({ exams, onSearch }) => {
+    const [searchTerm, setSearchTerm] = useState("")
 
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value)
+    }
 
-const ExamListPageContent = ({ exams }) => {
-    return (<>
-        <ExamPageNavbar exam={exams} />
-        {/* <ExamLargeCard exam={exams}> */}
-            Exams {JSON.stringify(exams)} <br />
-            <ExamList exams={exams} />
-        {/* </ExamLargeCard> */}
-    </>)
+    const handleSearchSubmit = (e) => {
+        e.preventDefault() // Prevent form submission
+        onSearch(searchTerm)
+    }
+
+    return (
+        <Container fluid>
+            <Row className="mb-4">
+                <Col>
+                    <Card>
+                        <Card.Header>
+                            <h4 className="mb-0">Seznam zkoušek</h4>
+                        </Card.Header>
+                        <Card.Body>
+                            <Row className="mb-3">
+                                <Col md={8}>
+                                    <Form onSubmit={handleSearchSubmit}>
+                                        <InputGroup>
+                                            <InputGroup.Text>
+                                                <Search />
+                                            </InputGroup.Text>
+                                            <Form.Control
+                                                placeholder="Hledat zkoušky..."
+                                                value={searchTerm}
+                                                onChange={handleSearchChange}
+                                            />
+                                            <Button type="submit" variant="outline-primary">
+                                                Hledat
+                                            </Button>
+                                        </InputGroup>
+                                    </Form>
+                                </Col>
+                                <Col md={4} className="text-end">
+                                    <ExamButton exam={{}} operation="C" className="btn btn-primary">
+                                        Přidat novou zkoušku
+                                    </ExamButton>
+                                </Col>
+                            </Row>
+                            <ExamList exams={exams} />
+                        </Card.Body>
+                    </Card>
+                </Col>
+            </Row>
+        </Container>
+    )
 }
 
 /**
@@ -62,29 +106,34 @@ const ExamListPageContent = ({ exams }) => {
  *
  * <ExamPageContentLazy exam={examId} />
  */
-const ExamListPageContentLazy = ({ }) => {
-    const { error, loading, dispatchResult, fetch } = useAsyncAction(ExamReadPageAsyncAction,{})
-    const [delayer] = useState(() => CreateDelayer())
-    console.log(dispatchResult)
+const ExamListPageContentLazy = () => {
+    const { error, loading, dispatchResult, fetch } = useAsyncAction(ExamReadPageAsyncAction, {})
 
-    const handleChange = async (e) => {
-        // console.log("GroupCategoryPageContentLazy.handleChange.e", e)
-        const data = e.target.value
-        const serverResponse = await delayer(() => fetch(data))
-        // console.log("GroupCategoryPageContentLazy.serverResponse", serverResponse)
-    }
-    const handleBlur = async (e) => {
-        // console.log("GroupCategoryPageContentLazy.handleBlur.e", e)
-        const data = e.target.value
-        const serverResponse = await delayer(() => fetch(data))
-        // console.log("GroupCategoryPageContentLazy.serverResponse", serverResponse)
+    const handleSearch = async (searchTerm) => {
+        if (!searchTerm) {
+            await fetch({})
+            return
+        }
+
+        await fetch({ 
+            where: {
+                name: { _ilike: `%${searchTerm}%` }
+            }
+        })
     }
 
-    return (<>
-        {loading && <LoadingSpinner />}
-        {error && <ErrorHandler errors={error} />}
-        {dispatchResult && <ExamListPageContent exams={dispatchResult.data.result} onChange={handleChange} onBlur={handleBlur} />}
-    </>)
+    return (
+        <>
+            {loading && <LoadingSpinner />}
+            {error && <ErrorHandler errors={error} />}
+            {dispatchResult && (
+                <ExamListPageContent 
+                    exams={dispatchResult.data.result} 
+                    onSearch={handleSearch}
+                />
+            )}
+        </>
+    )
 }
 
 /**
@@ -104,7 +153,5 @@ const ExamListPageContentLazy = ({ }) => {
  * // Navigating to "/exam/12345" will render the page for the exam entity with ID 12345.
  */
 export const ExamListPage = () => {
-    
-
     return <ExamListPageContentLazy />
 }
