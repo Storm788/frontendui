@@ -32,7 +32,7 @@ import { Card, Row, Col, Badge } from "react-bootstrap"
 
 
 
-const ExamPageContent = ({ exam, students }) => {
+const ExamPageContent = ({ exam, students, onStudentAdded }) => {
     return (<>
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
@@ -42,7 +42,7 @@ const ExamPageContent = ({ exam, students }) => {
                     <Card>
                         {/* Tělo karty bez vnitřního odsazení pro lepší vzhled seznamu */}
                         <Card.Body className="p-0">
-                            <StudentList students={students} />
+                            <StudentList students={students} onStudentAdded={onStudentAdded} examId={exam.id} />
                         </Card.Body>
                     </Card>
                 </Col>
@@ -77,26 +77,25 @@ const ExamPageContentLazy = ({ exam }) => {
     const { error, loading, entity, fetch } = useAsyncAction(ExamReadAsyncAction, exam)
     const { error: evalsError, loading: evalsLoading, dispatchResult: evalsDispatchResult, fetch: evalFetch }
         = useAsyncAction(EvaluationReadPageAsyncAction, { where: { exam_id: { _eq: exam.id } } })
-    console.log(evalsDispatchResult)
     const [delayer] = useState(() => CreateDelayer())
 
     const handleChange = async (e) => {
-        // console.log("GroupCategoryPageContentLazy.handleChange.e", e)
         const data = e.target.value
-        const serverResponse = await delayer(() => fetch(data))
-        // console.log("GroupCategoryPageContentLazy.serverResponse", serverResponse)
+        await delayer(() => fetch(data))
     }
     const handleBlur = async (e) => {
-        // console.log("GroupCategoryPageContentLazy.handleBlur.e", e)
         const data = e.target.value
-        const serverResponse = await delayer(() => fetch(data))
-        // console.log("GroupCategoryPageContentLazy.serverResponse", serverResponse)
+        await delayer(() => fetch(data))
+    }
+    // Callback to refresh exam data after student is added
+    const handleStudentAdded = () => {
+        fetch(exam)
     }
 
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <ExamPageContent exam={entity} evals={evalsDispatchResult?.data.result || []} onChange={handleChange} onBlur={handleBlur} />}
+        {entity && <ExamPageContent exam={entity} students={entity.evaluations?.map(e => ({...e, ...e.student})) || []} onStudentAdded={handleStudentAdded} />}
     </>)
 }
 

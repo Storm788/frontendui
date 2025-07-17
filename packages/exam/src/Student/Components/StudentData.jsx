@@ -1,13 +1,13 @@
 import { StudentLink } from "."
-import { ListGroup, Button, Row, Col } from "react-bootstrap"
-import { StudentButton } from "."
-import { PersonPlusFill, PencilSquare, Trash } from "react-bootstrap-icons"
+import { ListGroup, Row, Col } from "react-bootstrap"
+import { StudentEvaluationInsert } from "../../Exam/Components"
 
 /**
  * Komponenta zobrazující seznam studentů s jejich základními údaji a ovládacími prvky
  * @param {Object[]} students - Pole studentů
+ * @param {Function} onStudentAdded - Callback when a student is added
  */
-export const StudentList = ({ students }) => {
+export const StudentList = ({ students, examId, programId, onStudentAdded }) => {
     return (
         <>
             {/* Záhlaví seznamu s nadpisem a tlačítkem pro přidání */}
@@ -17,14 +17,8 @@ export const StudentList = ({ students }) => {
                     <h5 className="mb-0">Seznam studentů</h5>
                 </Col>
                 <Col className="text-end">
-                    {/* Tlačítko pro přidání nového studenta */}
-                    <StudentButton 
-                        student={{}} 
-                        operation="C" 
-                        className="btn btn-primary">
-                        <PersonPlusFill className="me-2" />
-                        Přidat studenta
-                    </StudentButton>
+                    {/* Komponenta pro přidání existujícího studenta do zkoušky */}
+                    <StudentEvaluationInsert examId={examId} programId={programId} onDone={onStudentAdded}></StudentEvaluationInsert>
                 </Col>
             </Row>
 
@@ -45,23 +39,6 @@ export const StudentList = ({ students }) => {
                                         )}
                                     </small>
                                 </div>
-                            </div>
-                            {/* Tlačítka pro úpravu a smazání studenta */}
-                            <div>
-                                <StudentButton 
-                                    student={student} 
-                                    operation="U" 
-                                    className="btn btn-outline-success btn-sm me-2">
-                                    <PencilSquare className="me-1" />
-                                    Upravit
-                                </StudentButton>
-                                <StudentButton 
-                                    student={student} 
-                                    operation="D" 
-                                    className="btn btn-outline-danger btn-sm">
-                                    <Trash className="me-1" />
-                                    Smazat
-                                </StudentButton>
                             </div>
                         </ListGroup.Item>
                     ))

@@ -3,9 +3,9 @@ import { StudentLargeFragment } from "./StudentFragments";
 
 const StudentUpdateMutation = createQueryStrLazy(
 `
-mutation StudentUpdateMutation($id: UUID!, $lastchange: DateTime!, $semesterNumber: Int, $userId: UUID!) {
+mutation StudentUpdateMutation($id: UUID!, $lastchange: DateTime!, $semesterNumber: Int, $programId: UUID, $stateId: UUID) {
   result: studentUpdate(
-    student: {id: $id, lastchange: $lastchange, semesterNumber: $semesterNumber, userId: $userId}
+    student: {id: $id, lastchange: $lastchange, semesterNumber: $semesterNumber, programId: $programId, stateId: $stateId}
   ) {
     ... on StudentGQLModelUpdateError {
       failed

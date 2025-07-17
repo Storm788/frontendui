@@ -67,6 +67,7 @@ import { StudentMediumEditableContent } from "./StudentMediumEditableContent";
  * @returns {JSX.Element} The dynamically selected button component for the specified operation.
  */
 export const StudentButton = ({ operation, children, student, onDone = () => {}, ...props }) => {
+
     const operationConfig = {
         C: {
             asyncAction: StudentInsertAsyncAction,
@@ -105,8 +106,7 @@ export const StudentButton = ({ operation, children, student, onDone = () => {},
             ...student,
             ...params,
             studentId: student?.id,
-            semesterNumber: student?.semesterNumber ? parseInt(student.semesterNumber) : undefined,
-            userId: student?.userId || student?.user?.id,
+            semesterNumber: student?.semesterNumber ? parseInt(student?.semesterNumber) : undefined,
         };
         const freshStudent = await fetch(fetchParams);
         onDone(freshStudent); // Pass the result to the external callback

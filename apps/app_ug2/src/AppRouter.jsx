@@ -13,12 +13,12 @@ export const Routes = [
         element: <ExamPage />,
     },
     {
-        path: `/exampage/evaluation/view/:id`,
-        element: <EvaluationPage/>
+        // path: `/exampage/evaluation/view/:id`,
+        // element: <EvaluationPage/>
     },
     {
-        path: `/exampage/student/view/:id`,
-        element: <StudentPage/>
+        // path: `/exampage/student/view/:id`,
+        // element: <StudentPage/>
     },
     {
         path: '/exampage/examlistpage/view/',
