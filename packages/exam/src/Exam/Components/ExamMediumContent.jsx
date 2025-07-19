@@ -40,8 +40,8 @@ export const ExamMediumContent = ({exam, children}) => {
         <>
             ID:({exam.id}) <br/>
             Name: {exam.name} <br/>
-            Max Score: {exam.maxScore} <br/>
-            Min Score: {exam.minScore} <br/>
+            Maximální skóre: {exam.maxScore} <br/>
+            Minimální skóre: {exam.minScore} <br/>
             Last Change: {exam.lastchange} <br/>
             {/* UserMediumContent <br />
             {JSON.stringify(user)} */}

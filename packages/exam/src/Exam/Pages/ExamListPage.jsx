@@ -43,9 +43,11 @@ const ExamListPageContent = ({ exams, onSearch }) => {
     }
 
     return (
+        
         <Container fluid>
             <Row className="mb-4">
                 <Col>
+                <ExamPageNavbar exams={exams} />
                     <Card>
                         <Card.Header>
                             <h4 className="mb-0">Seznam zkoušek</h4>
