@@ -22,6 +22,15 @@ const QueryStudentAsyncAction = createAsyncGraphQLAction(`query QueryInstructor(
   }
 }`)
 
+const InsertStudentAsyncAction = createAsyncGraphQLAction(`mutation InsertStudent($userId: UUID!, $programId: UUID!) {
+  studentInsert(student: {programId: $programId, userId: $userId, stateId: "51d101a0-81f1-44ca-8366-6cf51432e8d6"}) {
+  __typename
+    ... on StudentGQLModel {
+      id
+    }
+  }
+}`)
+
 const EvaluationInsertAsyncAction = createAsyncGraphQLAction(`mutation MyMutation($studentId: UUID!, $examId: UUID!, $passed: Boolean!, $points: Int!, $id: UUID) {
   evaluationInsert(
     evaluation: {studentId: $studentId, passed: $passed, points: $points, examId: $examId, id: $id}
@@ -51,7 +60,6 @@ const LocalStudent = ({ user, onSelect }) => {
     )
 }
 
-
 export const StudentEvaluationInsert = ({ examId, onDone }) => {
   const [pattern, setPattern] = useState("");
   const [users, setUsers] = useState([]);
@@ -64,7 +72,19 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
     {},
     { deferred: true }
   );
-  const { fetch: insertEvaluation } = useAsyncAction(EvaluationInsertAsyncAction, {}, { deferred: true });
+  
+  // Move the hook call to the top level of the component
+  const { fetch: insertStudent } = useAsyncAction(
+    InsertStudentAsyncAction, 
+    {}, 
+    { deferred: true }
+  );
+  
+  const { fetch: insertEvaluation } = useAsyncAction(
+    EvaluationInsertAsyncAction, 
+    {}, 
+    { deferred: true }
+  );
 
   // Vyhledávání uživatelů při změně patternu
   const handlePatternChange = async (e) => {
@@ -74,7 +94,8 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
     if (value.length > 0) {
       const result = await fetchUsers({ pattern: `%${value}%` });
       console.log("Výsledek fetchUsers:", result);
-      setUsers(result?.data?.userPage.filter(u => u.studies.length > 0) ?? []);
+      setUsers(result?.data?.userPage);
+      console.log(users);
     } else {
       setUsers([]);
     }
@@ -85,11 +106,14 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
     setSelectedUser(user);
     console.log("Kliknuto na uživatele:", user);
     
-    // TODO: Tady je potreba ziskat spravneho studenta z useru.
-    // Idealne bychom filtrovali na serveru podle studyPlan id, jenze to nevypada, ze funguje. :(
-    const student = user.studies[0];
+    // Use the hook that was declared at the top level
+    const studentResult = await insertStudent({ 
+      userId: user.id, 
+      programId: "0ac1761b-0ec7-4fc2-b4d7-127e79a316eb"
+    });
 
     try {
+      const student = studentResult?.data?.studentInsert;
       if (student?.id) {
         const evaluationResult = await insertEvaluation({
           studentId: student.id,
@@ -98,9 +122,11 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
           points: 0,
         });
         console.log("Výsledek insertEvaluation:", evaluationResult);
-        if (evaluationResult?.id) {
+        
+        const evaluation = evaluationResult?.data?.evaluationInsert;
+        if (evaluation?.id) {
           //alert("Evaluation úspěšně vytvořena!");
-          onDone?.(evaluationResult);
+          onDone?.(evaluation);
           setPattern("");
           setSelectedUser(null);
           setPoints("");

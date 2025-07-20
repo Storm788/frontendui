@@ -31,7 +31,6 @@ import { Card, Row, Col, Badge } from "react-bootstrap"
  */
 
 
-
 const ExamPageContent = ({ exam, students, onStudentAdded }) => {
     return (<>
         <ExamPageNavbar exam={exam} />
