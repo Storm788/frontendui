@@ -125,15 +125,7 @@ const StudentEvaluationDisplay = ({ evaluation }) => {
  * @param {Function} onStudentAdded - Callback when a student is added
  * @param {Function} onStudentEvaluated - Callback when a student is evaluated
  */
-export const StudentList = ({ students, minScore = 50, maxScore = 100, examId, programId, onStudentAdded, onStudentEvaluated }) => {
-    const { loading, entity, error } = useAsyncAction(ExamReadAsyncAction, { id: examId }, {});
-    // Create students array from exam.evaluations
-    students = entity?.evaluations
-      ? entity.evaluations.map(evaluation => evaluation.student)
-      : [];
-
-    console.log("Loaded students:", students);
-
+export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, programId, onStudentAdded, onStudentEvaluated }) => {
     const [evaluatingStudent, setEvaluatingStudent] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
@@ -188,7 +180,7 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, examId, p
                 </Col>
                 <Col className="text-end">
                     {/* Komponenta pro přidání existujícího studenta do zkoušky */}
-                    <StudentEvaluationInsert examId={examId} programId={programId} onDone={onStudentAdded}></StudentEvaluationInsert>
+                    <StudentEvaluationInsert examId={exam.id} programId={programId} onDone={onStudentAdded}></StudentEvaluationInsert>
                 </Col>
             </Row>
 
@@ -196,13 +188,6 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, examId, p
             <ListGroup variant="flush">
                 {students && students.length > 0 ? (
                     students.map(student => {
-
-                        const evaluation = entity?.evaluations?.find(
-                          (evaluation) => evaluation.student?.id === student.id
-                        );
-                        const hasEvaluation = !!evaluation;
-
-                        
                         return (
                             <div key={student.id}>
                                 <ListGroup.Item className="d-flex justify-content-between align-items-center">
@@ -210,10 +195,10 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, examId, p
                                     <div>
                                         {/* Jméno a semestr studenta */}
                                         <div>
-                                            <strong>{student.student.name} {student.student.surname}</strong>
+                                            <strong>{student.student.student.name} {student.student.student.surname}</strong>
                                             <small className="text-muted ms-2">
                                                 {student.student.semesterNumber && (
-                                                    <span>(Semestr: {student.student.semesterNumber})</span>
+                                                    <span>(Semestr: {student.student.student.semesterNumber})</span>
                                                 )}
                                             </small>
                                         </div>
@@ -221,18 +206,7 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, examId, p
                                     
                                     {/* Hodnocení nebo tlačítko pro hodnocení */}
                                     <div>
-                                        {hasEvaluation ? (
-                                            <StudentEvaluationDisplay evaluation={evaluation} />
-                                        ) : (
-                                            <Button 
-                                                variant="primary" 
-                                                size="sm"
-                                                onClick={() => handleEvaluateStudent(student)}
-                                                disabled={evaluatingStudent?.id === student.id}
-                                            >
-                                                Hodnotit
-                                            </Button>
-                                        )}
+                                            <StudentEvaluationDisplay evaluation={student} />
                                     </div>
                                 </ListGroup.Item>
                                 

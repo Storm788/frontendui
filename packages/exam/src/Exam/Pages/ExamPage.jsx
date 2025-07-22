@@ -41,7 +41,7 @@ const ExamPageContent = ({ exam, students, onStudentAdded }) => {
                     <Card>
                         {/* Tělo karty bez vnitřního odsazení pro lepší vzhled seznamu */}
                         <Card.Body className="p-0">
-                            <StudentList students={students} onStudentAdded={onStudentAdded} examId={exam.id} />
+                            <StudentList students={students} onStudentAdded={onStudentAdded} exam={exam} />
                         </Card.Body>
                     </Card>
                 </Col>
@@ -75,7 +75,7 @@ const ExamPageContent = ({ exam, students, onStudentAdded }) => {
 const ExamPageContentLazy = ({ exam }) => {
     const { error, loading, entity, fetch } = useAsyncAction(ExamReadAsyncAction, exam)
     const { error: evalsError, loading: evalsLoading, dispatchResult: evalsDispatchResult, fetch: evalFetch }
-        = useAsyncAction(EvaluationReadPageAsyncAction, { where: { exam_id: { _eq: exam.id } } })
+        = useAsyncAction(EvaluationReadPageAsyncAction, { where: { exam_id: { _eq: exam.id } }, limit: 100 })
     const [delayer] = useState(() => CreateDelayer())
 
     const handleChange = async (e) => {
@@ -91,10 +91,13 @@ const ExamPageContentLazy = ({ exam }) => {
         fetch(exam)
     }
 
+    const students = evalsDispatchResult?.data?.result || [];
+    console.log("ExamPageContentLazy.students", students)
+
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <ExamPageContent exam={entity} students={entity.evaluations?.map(e => ({...e, ...e.student})) || []} onStudentAdded={handleStudentAdded} />}
+        {entity && <ExamPageContent exam={entity} students={students} onStudentAdded={handleStudentAdded} />}
     </>)
 }
 

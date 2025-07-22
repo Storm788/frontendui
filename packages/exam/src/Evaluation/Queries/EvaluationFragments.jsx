@@ -13,6 +13,9 @@ fragment EvaluationLink on EvaluationGQLModel {
   student {
     student {
       fullname
+      name
+      surname
+      id
     }
   }
 }
