@@ -3,7 +3,6 @@ import { StudentEvaluationInsert } from "../../Exam/Components"
 import { useState } from "react"
 import { EvaluationInsertAsyncAction } from "../../Evaluation/Queries";
 import {useAsyncAction} from "@hrbolek/uoisfrontend-gql-shared";
-import { ExamReadAsyncAction } from "../../Exam/Queries";
 
 
 
@@ -144,14 +143,9 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, pro
         setSubmitting(true);
         
         try {
-
-            // Simulace API volání
-            await new Promise(resolve => setTimeout(resolve, 1000));
             
             // Přidání hodnocení k studentovi (pro lokální zobrazení)
             student.evaluation = evaluationData;
-            
-            alert(`Hodnocení pro ${student.student.name} ${student.student.surname} bylo úspěšně uloženo! (${evaluationData.points} bodů, ${evaluationData.passed ? 'prošel' : 'neprošel'})`);
             
             // Zavolání callback funkce
             if (onStudentEvaluated) {
