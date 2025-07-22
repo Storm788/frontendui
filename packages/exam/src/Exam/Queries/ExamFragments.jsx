@@ -38,6 +38,7 @@ fragment ExamLarge on ExamGQLModel {
         name
         surname
         email
+        id
       }
     }
   }

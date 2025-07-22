@@ -28,8 +28,8 @@ export const ExamMediumEditableContent = ({exam, onChange=(e)=>null, onBlur=(e)=
         <>           
             <Input id={"name"} label={"Název"} className="form-control" defaultValue={exam?.name|| "Polni beh"} onChange={onChange} onBlur={onBlur} />
             <Input id={"name_en"} label={"Anglický název"} className="form-control" defaultValue={exam?.name_en|| "Field run"} onChange={onChange} onBlur={onBlur}/>
-            <Input id={"minScore"} label={"Minimální skóre"} className="form-control" defaultValue={exam?.minScore|| "Minimalni skore"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"maxScore"} label={"Maximální skóre"} className="form-control" defaultValue={exam?.maxScore|| "Maximalni skore"} onChange={onChange} onBlur={onBlur} />
+            <Input id={"minScore"} label={"Minimální skóre"} className="form-control" defaultValue={50} value={50} readOnly />
+            <Input id={"maxScore"} label={"Maximální skóre"} className="form-control" defaultValue={100} value={100} readOnly />
             {children}
         </>
     )

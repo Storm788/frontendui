@@ -90,12 +90,9 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
   const handlePatternChange = async (e) => {
     const value = e.target.value;
     setPattern(value);
-    console.log("Zadán pattern:", value);
     if (value.length > 0) {
       const result = await fetchUsers({ pattern: `%${value}%` });
-      console.log("Výsledek fetchUsers:", result);
       setUsers(result?.data?.userPage);
-      console.log(users);
     } else {
       setUsers([]);
     }
@@ -104,7 +101,6 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
   // Po kliknutí na uživatele
   const handleUserClick = async (user) => {
     setSelectedUser(user);
-    console.log("Kliknuto na uživatele:", user);
     
     // Use the hook that was declared at the top level
     const studentResult = await insertStudent({ 
