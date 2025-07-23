@@ -1,12 +1,9 @@
 import { useState } from "react"
 import { useParams } from "react-router"
-import { EvaluationButton, EvaluationLargeCard } from "../Components"
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
 import { EvaluationReadAsyncAction } from "../Queries"
 import { EvaluationPageNavbar } from "./EvaluationPageNavbar"
-import { StudentList } from "../../Student/Components/StudentData"
-import { StudentReadPageAsyncAction } from "../../Student/Queries/StudentReadPageAsyncAction"
 
 /**
  * A page content component for displaying detailed information about an evaluation entity.
@@ -33,8 +30,6 @@ const EvaluationPageContent = ({ evaluation }) => {
     return (<>
         <EvaluationPageNavbar evaluation={evaluation} />
         <EvaluationLargeCard evaluation={evaluation}>
-            Exam {JSON.stringify(evaluation)} <br />
-            <StudentList students= {evaluation.students} />
         </EvaluationLargeCard>
     </>)
 }

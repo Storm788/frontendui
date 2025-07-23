@@ -4,7 +4,20 @@ import { EvaluationInsertAsyncAction } from "../../Evaluation/Queries";
 import {useAsyncAction} from "@hrbolek/uoisfrontend-gql-shared";
 
 
-// Komponenta pro hodnocení studenta
+/**
+ * Komponenta formuláře pro hodnocení studenta.
+ *
+ * @component
+ * @param {Object} props - Vlastnosti komponenty.
+ * @param {Object} props.student - Objekt studenta, který je hodnocen.
+ * @param {number} props.minScore - Minimální počet bodů pro úspěšné hodnocení.
+ * @param {number} props.maxScore - Maximální možný počet bodů.
+ * @param {boolean} props.submitting - Indikátor, zda je hodnocení právě ukládáno.
+ * @param {string} props.examId - ID zkoušky, ke které se hodnocení vztahuje.
+ * @param {function} props.onDone - Callback funkce volaná po dokončení uložení hodnocení.
+ *
+ * @returns {JSX.Element} Formulář pro zadání a uložení hodnocení studenta.
+ */
 export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId, onDone }) => {
   const { fetch: fetchEvaluationInsert } = useAsyncAction(EvaluationInsertAsyncAction, {}, { deffered: true });
   const [points, setPoints] = useState("");

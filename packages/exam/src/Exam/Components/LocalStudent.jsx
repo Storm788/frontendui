@@ -25,8 +25,6 @@ export const LocalStudent = ({ user, insertStudent, examId, onDone}) => {
     console.log(student)
     setStudentObj(student);
     setShowForm(true);
-
-
   };
   return (
     <div>
