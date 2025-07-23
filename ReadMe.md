@@ -1,11 +1,3 @@
-# Změny
-
-## 3.4.2025
-
-- script `createscalar.js`
-- script `createvector.js`
-- template `EmptyVectorsAttribute.jsx`
-
 # Deníček
 ### Zadání:
 - Zobrazení zkoušky (v termínu u semestru / předmětu)/ Seznam zkoušených / Podmínky zkoušek a Zápis výsledků (výkonů) souhrnná hodnocení
@@ -64,3 +56,11 @@ Odkaz: https://github.com/Storm788/frontendui/commit/4810045c04bd4939045e5656b6a
 - Vylepšil se proces hodnocení přidáním formuláře, implementací funkce pro vkládání studentů a lepším zobrazením jejich seznamu.
 - Pro lepší orientaci se integrovala nová navigační lišta (NavBar).
 - Proběhl velký úklid kódu, oprava chyb a příprava na publikaci.
+
+# Změny
+
+## 3.4.2025
+
+- script `createscalar.js`
+- script `createvector.js`
+- template `EmptyVectorsAttribute.jsx`
