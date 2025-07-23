@@ -1,14 +1,13 @@
 import { useState } from "react"
-import { data, useParams } from "react-router"
+import { useParams } from "react-router"
 import { CreateDelayer, ErrorHandler, LoadingSpinner } from "@hrbolek/uoisfrontend-shared"
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared"
-import { ExamButton, ExamLargeCard } from "../Components"
+import { ExamLargeCard } from "../Components"
 import { ExamReadAsyncAction } from "../Queries"
 import { ExamPageNavbar } from "./ExamPageNavbar"
 import { StudentList } from "../../Student/Components/StudentData"
 import { EvaluationReadPageAsyncAction } from "../../Evaluation/Queries/EvaluationReadPageAsyncAction"
-import { Card, Row, Col, Badge } from "react-bootstrap"
-
+import { Card, Row, Col} from "react-bootstrap"
 /**
  * A page content component for displaying detailed information about an exam entity.
  *

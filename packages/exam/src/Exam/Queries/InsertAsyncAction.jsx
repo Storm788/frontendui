@@ -36,20 +36,3 @@ export const InsertStudentAsyncAction = createAsyncGraphQLAction(`mutation Inser
     }
   }
 }`)
-
-const EvaluationInsertAsyncAction = createAsyncGraphQLAction(`mutation MyMutation($studentId: UUID!, $examId: UUID!, $passed: Boolean!, $points: Int!, $id: UUID) {
-  evaluationInsert(
-    evaluation: {studentId: $studentId, passed: $passed, points: $points, examId: $examId, id: $id}
-  ) {
-    __typename
-    ... on EvaluationGQLModel {
-      id
-      lastchange
-    }
-    ... on InsertError {
-      input
-      failed
-      msg
-    }
-  }
-}`)

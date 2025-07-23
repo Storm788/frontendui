@@ -1,4 +1,4 @@
-import { ListGroup, Row, Col, Button, Card, Form, Badge } from "react-bootstrap"
+import { Row, Col, Button, Card, Form, Badge } from "react-bootstrap"
 import { useState } from "react"
 import { EvaluationInsertAsyncAction } from "../../Evaluation/Queries";
 import {useAsyncAction} from "@hrbolek/uoisfrontend-gql-shared";
@@ -9,11 +9,6 @@ export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId
   const { fetch: fetchEvaluationInsert } = useAsyncAction(EvaluationInsertAsyncAction, {}, { deffered: true });
   const [points, setPoints] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const pointsNumber = parseInt(points) || 0;
-    const passed = pointsNumber >= minScore; // Automatický výpočet
-  };
 
   const onClick = async (e) => {
     const EvaluationInsertParams = {
@@ -27,10 +22,6 @@ export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId
     onDone(evaluationResult);
   };
 
-  const onCancel = (e) => {
-    return;
-  }
-
   // Aktuální preview výsledku
   const currentPoints = parseInt(points) || 0;
   const wouldPass = currentPoints >= minScore;
@@ -41,7 +32,7 @@ export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId
         <h6 className="mb-0">Hodnocení: {student.student.name} {student.student.surname}</h6>
       </Card.Header>
       <Card.Body>
-        <Form onSubmit={handleSubmit}>
+        <Form>
           <Row>
             <Col md={6}>
               <Form.Group className="mb-3">

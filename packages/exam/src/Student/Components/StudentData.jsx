@@ -1,41 +1,8 @@
-import { ListGroup, Row, Col, Button, Card, Form, Badge } from "react-bootstrap"
+import { ListGroup, Row, Col, Badge } from "react-bootstrap"
 import { StudentEvaluationInsert } from "../../Exam/Components"
 import { useState } from "react"
 import { EvaluationForm } from "../../Exam/Components/StudentEval";
-import { EvaluationDeleteButton } from "../../Evaluation/Components/EvaluationDeleteButton";
-import { EvaluationButton } from "../../Evaluation/Components";
-
-
-// Komponenta pro zobrazení existujícího hodnocení
-const StudentEvaluationDisplay = ({ evaluation, onDone, readOnly }) => {
-    evaluation.passed = evaluation.points >= 50;
-    if (evaluation.points < 50) evaluation.grade = "F";
-    else if (evaluation.points < 60) evaluation.grade = "E";
-    else if (evaluation.points < 70) evaluation.grade = "D";
-    else if (evaluation.points < 80) evaluation.grade = "C";
-    else if (evaluation.points < 90) evaluation.grade = "B";
-    else evaluation.grade = "A";
-    return (
-    <div className="d-flex align-items-center gap-2">
-        <Badge bg={evaluation.passed ? "success" : "danger"}>
-        {evaluation.points} bodů
-        </Badge>
-        <small>
-            {evaluation.grade === 'E' ? "sotva" : evaluation.grade}
-        </small>
-        <small className="text-muted">
-            {evaluation.passed ? "Prošel" : "Neprošel"}
-        </small>
-        {/* <EvaluationDeleteButton evaluationId={evaluation.id} lastchange={evaluation.lastchange} onDone={onDone}/> */}
-        {!readOnly && (
-          <>
-            <EvaluationButton operation="D" evaluation={evaluation} onDone={onDone}>Smazat</EvaluationButton>
-            <EvaluationButton operation="U" evaluation={evaluation} onDone={onDone}>Upravit</EvaluationButton>
-          </>
-        )}
-    </div>
-  );
-};
+import { StudentEvaluationDisplay } from "../../Student/Components/StudentEvaluationDisplay";
 
 /**
  * Komponenta zobrazující seznam studentů s jejich základními údaji a ovládacími prvky
@@ -49,11 +16,7 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, pro
     const [evaluatingStudent, setEvaluatingStudent] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
-    // Otevření formuláře pro hodnocení
-    const handleEvaluateStudent = (student) => {
-        setEvaluatingStudent(student);
-    };
-
+  
     // Zrušení hodnocení
     const handleCancelEvaluation = () => {
         setEvaluatingStudent(null);

@@ -1,10 +1,19 @@
 import { ExamLink } from "."
-import { ListGroup, Badge, Row, Col, Button } from "react-bootstrap"
+import { ListGroup, Row, Col} from "react-bootstrap"
 import { ExamButton } from "."
 import { PersonFill, Calendar3, Trophy } from "react-bootstrap-icons"
 
 
-
+/**
+ * Vykreslí seznam zkoušek pomocí komponent React Bootstrap.
+ *
+ * @component
+ * @param {Object} props
+ * @param {Array<Object>} props.exams - Pole objektů zkoušek k zobrazení.
+ * @param {boolean} props.readOnly - Pokud je true, skryje tlačítka pro úpravu a smazání.
+ *
+ * @returns {JSX.Element} Vykreslený seznam zkoušek.
+ */
 export const ExamList = ({ exams, readOnly }) => {
     return (
         <ListGroup variant="flush">
