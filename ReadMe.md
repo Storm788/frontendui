@@ -29,7 +29,7 @@ Dne 8.5.2025
 Odkaz: https://github.com/Storm788/frontendui/commit/b498c0ed14828a78e1e3f9cd635b2d4b3d6ea1e4
 
 ##### Problémy:
--Nepodařilo se nám to nahrát na git. Žádná data v dadbázi.
+-Nepodařilo se nám to nahrát na git. Žádná data v dadbázi. 
 ######## -Problém s vytvořením DeleteAsyncAction
 
 
