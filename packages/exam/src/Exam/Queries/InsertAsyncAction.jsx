@@ -1,4 +1,4 @@
-import { createAsyncGraphQLAction, useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
+import { createAsyncGraphQLAction} from "@hrbolek/uoisfrontend-gql-shared";
 
 export const QueryStudentAsyncAction = createAsyncGraphQLAction(`query QueryInstructor($pattern: String!) {
   userPage(

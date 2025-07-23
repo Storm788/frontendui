@@ -2,6 +2,7 @@ import { useState } from "react";
 import {EvaluationForm} from '../../Exam/Components/StudentEval.jsx';
 import{ QueryStudentAsyncAction } from "../../Exam/Queries/InsertAsyncAction.jsx";
 import { InsertStudentAsyncAction } from "../../Exam/Queries/InsertAsyncAction.jsx";
+import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
 
 // Komponenta pro zobrazení studenta
 const LocalStudent = ({ user, insertStudent, examId, onDone }) => {
@@ -30,7 +31,6 @@ const LocalStudent = ({ user, insertStudent, examId, onDone }) => {
 export const StudentEvaluationInsert = ({ examId, onDone }) => {
   const [pattern, setPattern] = useState("");
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
 
   const { fetch: fetchUsers, loading: loadingUsers } = useAsyncAction(
     QueryStudentAsyncAction,
@@ -70,7 +70,7 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
       <input
         className="form-control mb-2"
         type="text"
-        placeholder="Hledat uživatele"
+        placeholder="Přidat uživatele (hledat podle jména nebo příjmení)"
         value={pattern}
         onChange={handlePatternChange}
       />

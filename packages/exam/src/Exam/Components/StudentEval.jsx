@@ -84,13 +84,6 @@ export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId
             >
               {submitting ? 'Ukládám...' : 'Uložit hodnocení'}
             </Button>
-            <Button 
-              variant="secondary"
-              onClick={onCancel}
-              disabled={submitting}
-            >
-              Zrušit
-            </Button>
           </div>
         </Form>
       </Card.Body>
