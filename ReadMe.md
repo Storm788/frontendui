@@ -52,13 +52,24 @@ Odkaz: https://github.com/Storm788/frontendui/commit/4810045c04bd4939045e5656b6a
 - Původní struktura kódu začínala být neudržitelná a komplikovala další vývoj.
 - Bylo potřeba vyřešit klíčové funkční otázky: jak zjistit, kteří studenti patří k dané zkoušce, jak je najít a vložit, a jak jim přiřadit možnost hodnocení.
 - Aplikace nebyla připravena na správné fungovaní a její design vyžadoval vylepšení.
+- ExamPage má hromadu nedostatků, špátne fungovaní logiky *(exam.student.evaluation.student.name) = špatně*
+- Potřeba nějak získat studenty přes eval
+- student potřebuje hodnoty, které nevíme jak získat (userId, programId, stateId)
+- závěrečny kód je velmi nepřehledný
 
 ##### Vyřešené problémy mimo projektové dny:
-- Byla přidána a vylepšena funkcionalita komponenty StudentList a zprovozněn základní seznam zkoušek s tlačítky pro úpravy a mazání.
-- Došlo k propojení jednotlivých stránek pomocí routingu a k logickému spojení zkoušek (Exam) s hodnocením (Evaluation).
-- Vylepšil se proces hodnocení přidáním formuláře, implementací funkce pro vkládání studentů a lepším zobrazením jejich seznamu.
-- Pro lepší orientaci se integrovala nová navigační lišta (NavBar).
-- Proběhl velký úklid kódu, oprava chyb a příprava na publikaci.
+- Vytvořili jsme si novou strukturu pro zobrazování
+    - První je ExamListPage, která je napojena přes link na ExamPage
+- ExamListPage hotova z projektových dnů
+- Vyřešen problém ExamPage pochopení logiky *(exam.evaluation.student.student.name) = správna logika*
+- Vyřešen problém se získáváním stůdentů přes evaluation, tak že jsme si to nastavili na defaultní hodnoty a nasledně je upravovali
+- Student získal své hodnoty, proto s ním můžeme pracovat
+- Proběhl velký úklid kódu, vytvoření dalších komponent a příprava na publikaci.
+- Export nmpjs
+- Vytvořena NPMdoc
+
+#### Nevyřešené problémy mimo projektové dny:
+- Nelze nám nahrát grade do dabáze, obešli jsme to pomocí vypočtů a ukládání v kódu
 
 # Změny
 
