@@ -2,7 +2,7 @@
 ### Zadání:
 - Zobrazení zkoušky (v termínu u semestru / předmětu)/ Seznam zkoušených / Podmínky zkoušek a Zápis výsledků (výkonů) souhrnná hodnocení
 
-### **Commit na první projektový den:**
+## **Commit na první projektový den:**
 - Dne 3.4.2025 První vypsaní na stránku -> Hello World!
 
 Odkaz:https://github.com/Storm788/frontendui/commit/f188de23ab880ba3db50ea4f346b472719745144
@@ -27,7 +27,7 @@ Odkaz: https://github.com/Storm788/frontendui/commit/b498c0ed14828a78e1e3f9cd635
 
 
 
-### **Commit na třetí projektový den:**
+## **Commit na třetí projektový den:**
 - Dne 28.5.2025 Přidání StudentListu a propojení Exam a Evaluation
 
 Odkaz: https://github.com/Storm788/frontendui/commit/4810045c04bd4939045e5656b6a3c3a2e0ec90f1
