@@ -25,6 +25,13 @@ fragment ExamLarge on ExamGQLModel {
   name
   maxScore
   minScore
+  parentId
+  parts {
+    name
+    minScore
+    maxScore
+    id
+  }
   evaluations(limit: 100) {
     id
     lastchange

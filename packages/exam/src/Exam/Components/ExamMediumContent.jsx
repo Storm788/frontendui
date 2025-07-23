@@ -37,7 +37,7 @@ export const ExamMediumContent = ({exam, children}) => {
 export const ExamMediumContent = ({exam, children}) => {
     return (
         <>
-            ID:({exam.id}) <br/>
+            ID: {exam.id} <br/>
             Name: {exam.name} <br/>
             Maximální skóre: {exam.maxScore} <br/>
             Minimální skóre: {exam.minScore} <br/>
