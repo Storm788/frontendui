@@ -51,7 +51,7 @@ Odkaz: https://github.com/Storm788/frontendui/commit/4810045c04bd4939045e5656b6a
 ##### Problémy mimo projektové dny:
 - Původní struktura kódu začínala být neudržitelná a komplikovala další vývoj.
 - Bylo potřeba vyřešit klíčové funkční otázky: jak zjistit, kteří studenti patří k dané zkoušce, jak je najít a vložit, a jak jim přiřadit možnost hodnocení.
-- Aplikace nebyla připravena na vícejazyčnost a její design vyžadoval vylepšení.
+- Aplikace nebyla připravena na správné fungovaní a její design vyžadoval vylepšení.
 
 ##### Vyřešené problémy mimo projektové dny:
 - Byla přidána a vylepšena funkcionalita komponenty StudentList a zprovozněn základní seznam zkoušek s tlačítky pro úpravy a mazání.
