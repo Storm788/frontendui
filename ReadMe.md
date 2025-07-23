@@ -30,7 +30,7 @@ Odkaz: https://github.com/Storm788/frontendui/commit/b498c0ed14828a78e1e3f9cd635
 
 ##### Problémy:
 -Nepodařilo se nám to nahrát na git. Žádná data v dadbázi.
--Problém s vytvořením DeleteAsyncAction
+######## -Problém s vytvořením DeleteAsyncAction
 
 
 
