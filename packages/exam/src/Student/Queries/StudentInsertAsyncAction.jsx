@@ -16,5 +16,4 @@ mutation studentInsert($id: UUID, $semesterNumber: Int, $programId: UUID, $state
 `,
     StudentLargeFragment)
 
-
 export const StudentInsertAsyncAction = createAsyncGraphQLAction(StudentInsertMutation)
