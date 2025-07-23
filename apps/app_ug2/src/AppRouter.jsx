@@ -9,20 +9,20 @@ import { StudentPage, StudentRouterSegment } from "../../../packages/exam/src/St
 
 export const Routes = [
     {
-        path: `/exampage/exam/view/:id`,
-        element: <ExamPage />,
+            path: `/exam/exam/edit/:id`,
+            element: <ExamPage readOnly={false}/>,
     },
     {
-        // path: `/exampage/evaluation/view/:id`,
-        // element: <EvaluationPage/>
+        path: `/exam/exam/view/:id`,
+        element: <ExamPage readOnly={true}/>,
     },
     {
-        // path: `/exampage/student/view/:id`,
-        // element: <StudentPage/>
+        path: '/exampage/examlistpage/edit/',
+        element: <ExamListPage readOnly={false}/>,
     },
     {
         path: '/exampage/examlistpage/view/',
-        element: <ExamListPage/>
+        element: <ExamListPage readOnly={true}/>,
     },
     ExamRouterSegment,
     EvaluationRouterSegment,

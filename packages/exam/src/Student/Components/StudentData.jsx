@@ -7,7 +7,7 @@ import { EvaluationButton } from "../../Evaluation/Components";
 
 
 // Komponenta pro zobrazení existujícího hodnocení
-const StudentEvaluationDisplay = ({ evaluation, onDone }) => {
+const StudentEvaluationDisplay = ({ evaluation, onDone, readOnly }) => {
     evaluation.passed = evaluation.points >= 50;
     if (evaluation.points < 50) evaluation.grade = "F";
     else if (evaluation.points < 60) evaluation.grade = "E";
@@ -27,8 +27,12 @@ const StudentEvaluationDisplay = ({ evaluation, onDone }) => {
             {evaluation.passed ? "Prošel" : "Neprošel"}
         </small>
         {/* <EvaluationDeleteButton evaluationId={evaluation.id} lastchange={evaluation.lastchange} onDone={onDone}/> */}
-        <EvaluationButton operation="D" evaluation={evaluation} onDone={onDone}>Smazat</EvaluationButton>
-        <EvaluationButton operation="U" evaluation={evaluation} onDone={onDone}>Upravit</EvaluationButton>
+        {!readOnly && (
+          <>
+            <EvaluationButton operation="D" evaluation={evaluation} onDone={onDone}>Smazat</EvaluationButton>
+            <EvaluationButton operation="U" evaluation={evaluation} onDone={onDone}>Upravit</EvaluationButton>
+          </>
+        )}
     </div>
   );
 };
@@ -41,7 +45,7 @@ const StudentEvaluationDisplay = ({ evaluation, onDone }) => {
  * @param {Function} onStudentAdded - Callback when a student is added
  * @param {Function} onStudentEvaluated - Callback when a student is evaluated
  */
-export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, programId, onStudentAdded, onStudentEvaluated }) => {
+export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, programId, onStudentAdded, onStudentEvaluated, readOnly }) => {
     const [evaluatingStudent, setEvaluatingStudent] = useState(null);
     const [submitting, setSubmitting] = useState(false);
 
@@ -91,7 +95,7 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, pro
                 </Col>
                 <Col className="text-end">
                     {/* Komponenta pro přidání existujícího studenta do zkoušky */}
-                    <StudentEvaluationInsert examId={exam.id} programId={programId} onDone={onStudentAdded}></StudentEvaluationInsert>
+                    <StudentEvaluationInsert examId={exam.id} programId={programId} onDone={onStudentAdded} readOnly={readOnly}></StudentEvaluationInsert>
                 </Col>
             </Row>
 
@@ -113,7 +117,7 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, pro
                                     
                                     {/* Hodnocení nebo tlačítko pro hodnocení */}
                                     <div>
-                                            <StudentEvaluationDisplay evaluation={student} onDone={onStudentAdded}/>
+                                            <StudentEvaluationDisplay evaluation={student} onDone={onStudentAdded} readOnly={readOnly}/>
                                     </div>
                                 </ListGroup.Item>
                                 

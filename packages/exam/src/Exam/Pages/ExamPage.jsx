@@ -31,7 +31,7 @@ import { Card, Row, Col, Badge } from "react-bootstrap"
  */
 
 
-const ExamPageContent = ({ exam, students, onStudentAdded }) => {
+const ExamPageContent = ({ exam, students, onStudentAdded, readOnly }) => {
     return (<>
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
@@ -41,7 +41,7 @@ const ExamPageContent = ({ exam, students, onStudentAdded }) => {
                     <Card>
                         {/* Tělo karty bez vnitřního odsazení pro lepší vzhled seznamu */}
                         <Card.Body className="p-0">
-                            <StudentList students={students} onStudentAdded={onStudentAdded} exam={exam} />
+                            <StudentList students={students} onStudentAdded={onStudentAdded} exam={exam} readOnly={readOnly} />
                         </Card.Body>
                     </Card>
                 </Col>
@@ -72,7 +72,7 @@ const ExamPageContent = ({ exam, students, onStudentAdded }) => {
  *
  * <ExamPageContentLazy exam={examId} />
  */
-const ExamPageContentLazy = ({ exam }) => {
+const ExamPageContentLazy = ({ exam, readOnly }) => {
     const { error, loading, entity, fetch } = useAsyncAction(ExamReadAsyncAction, exam)
     const { error: evalsError, loading: evalsLoading, dispatchResult: evalsDispatchResult, fetch: evalFetch }
         = useAsyncAction(EvaluationReadPageAsyncAction, { where: { exam_id: { _eq: exam.id } }, limit: 100 })
@@ -97,7 +97,7 @@ const ExamPageContentLazy = ({ exam }) => {
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <ExamPageContent exam={entity} students={students} onStudentAdded={handleStudentAdded} />}
+        {entity && <ExamPageContent exam={entity} students={students} onStudentAdded={handleStudentAdded} readOnly={readOnly} />}
     </>)
 }
 
@@ -117,10 +117,9 @@ const ExamPageContentLazy = ({ exam }) => {
  *
  * // Navigating to "/exam/12345" will render the page for the exam entity with ID 12345.
  */
-export const ExamPage = () => {
+export const ExamPage = ({readOnly}) => {
     const { id } = useParams()
     const exam = { id }
 
-    return <ExamPageContentLazy exam={exam} />
-    //return <ExamPageContent exam={placeholder_data} />
+    return <ExamPageContentLazy exam={exam} readOnly={readOnly} />
 }

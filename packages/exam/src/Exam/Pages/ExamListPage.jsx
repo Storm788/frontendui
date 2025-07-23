@@ -30,7 +30,7 @@ import { Search } from "react-bootstrap-icons"
  * <ExamPageContent exam={examEntity} />
  */
 // A loading component for displaying content of an exam entity.
-const ExamListPageContent = ({ exams, onSearch }) => {
+const ExamListPageContent = ({ exams, onSearch, readOnly }) => {
     const [searchTerm, setSearchTerm] = useState("")
 
     const handleSearchChange = (e) => {
@@ -71,13 +71,15 @@ const ExamListPageContent = ({ exams, onSearch }) => {
                                         </InputGroup>
                                     </Form>
                                 </Col>
-                                <Col md={4} className="text-end">
-                                    <ExamButton exam={{}} operation="C" className="btn btn-primary">
-                                        Přidat novou zkoušku
-                                    </ExamButton>
-                                </Col>
+                                {readOnly ? null : (
+                                    <Col md={4} className="text-end">
+                                        <ExamButton exam={{}} operation="C" className="btn btn-primary">
+                                            Přidat novou zkoušku
+                                        </ExamButton>
+                                    </Col>
+                                )}
                             </Row>
-                            <ExamList exams={exams} />
+                            <ExamList exams={exams} readOnly={readOnly}/>
                         </Card.Body>
                     </Card>
                 </Col>
@@ -108,7 +110,7 @@ const ExamListPageContent = ({ exams, onSearch }) => {
  *
  * <ExamPageContentLazy exam={examId} />
  */
-const ExamListPageContentLazy = () => {
+const ExamListPageContentLazy = ({readOnly}) => {
     const { error, loading, dispatchResult, fetch } = useAsyncAction(ExamReadPageAsyncAction, {})
 
     const handleSearch = async (searchTerm) => {
@@ -132,6 +134,7 @@ const ExamListPageContentLazy = () => {
                 <ExamListPageContent 
                     exams={dispatchResult.data.result} 
                     onSearch={handleSearch}
+                    readOnly={readOnly}
                 />
             )}
         </>
@@ -154,6 +157,6 @@ const ExamListPageContentLazy = () => {
  *
  * // Navigating to "/exam/12345" will render the page for the exam entity with ID 12345.
  */
-export const ExamListPage = () => {
-    return <ExamListPageContentLazy />
+export const ExamListPage = ({readOnly}) => {
+    return <ExamListPageContentLazy readOnly={readOnly} />
 }

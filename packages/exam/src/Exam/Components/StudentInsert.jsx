@@ -5,7 +5,7 @@ import { InsertStudentAsyncAction } from "../../Exam/Queries/InsertAsyncAction.j
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
 
 // Komponenta pro zobrazení studenta
-const LocalStudent = ({ user, insertStudent, examId, onDone }) => {
+const LocalStudent = ({ user, insertStudent, examId, onDone}) => {
   const [showForm, setShowForm] = useState(false);
   const [studentObj, setStudentObj] = useState(null);
 
@@ -19,6 +19,7 @@ const LocalStudent = ({ user, insertStudent, examId, onDone }) => {
     setStudentObj(student);
     setShowForm(true);
 
+
   };
   return (
     <div>
@@ -28,7 +29,7 @@ const LocalStudent = ({ user, insertStudent, examId, onDone }) => {
   );
 };
 
-export const StudentEvaluationInsert = ({ examId, onDone }) => {
+export const StudentEvaluationInsert = ({ examId, onDone, readOnly }) => {
   const [pattern, setPattern] = useState("");
   const [users, setUsers] = useState([]);
 
@@ -58,12 +59,7 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
     }
   };
 
-  // Po kliknutí na uživatele
-  const handleUserClick = async (user) => {
-    setSelectedUser(user);
-    
-    
-  };
+  if (readOnly) return null;
 
   return (
     <div>
@@ -82,7 +78,7 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
               className="list-group-item list-group-item-action"
               style={{ cursor: "pointer", padding: 0 }}
             >
-              <LocalStudent user={user} onSelect={handleUserClick} insertStudent={insertStudent} examId={examId} onDone={onDone} />
+              <LocalStudent user={user} insertStudent={insertStudent} examId={examId} onDone={onDone}/>
             </li>
           ))}
         </ul>

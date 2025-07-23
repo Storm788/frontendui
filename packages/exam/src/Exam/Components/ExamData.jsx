@@ -5,7 +5,7 @@ import { PersonFill, Calendar3, Trophy } from "react-bootstrap-icons"
 
 
 
-export const ExamList = ({ exams }) => {
+export const ExamList = ({ exams, readOnly }) => {
     return (
         <ListGroup variant="flush">
             {exams.map(exam => (
@@ -43,6 +43,7 @@ export const ExamList = ({ exams }) => {
                                 )}
                             </div>
                         </Col>
+                        {readOnly ? null : (
                         <Col md={6} className="text-md-end mt-3 mt-md-0">
                             <ExamButton 
                                 exam={exam} 
@@ -59,6 +60,7 @@ export const ExamList = ({ exams }) => {
                                 Smazat
                             </ExamButton>
                         </Col>
+                        )}
                     </Row>
                 </ListGroup.Item>
             ))}

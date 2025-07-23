@@ -1,6 +1,6 @@
 {
   "name": "frontendui",
-  "version": "0.5.0",
+  "version": "0.0.1",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -15,8 +15,8 @@
     "listtree": "node scripts/listTree.js",
     "create:filter": "node scripts/generatefilterform.js",
 
-    "build:apps": "npm workspaces foreach --include=apps/* npm run build",
-    "publish:packages": "npm workspaces foreach --include=packages/* npm publish --access public"
+    "build:apps": "npm run build --workspaces --if-present",
+    "publish:packages": "npm publish --workspaces --access public"
     
   },
   "keywords": [],
@@ -24,8 +24,8 @@
   "license": "ISC",
   "description": "",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/app_ug2/*",
+    "packages/exam/*"
   ],
   "devDependencies": {
     "jsdoc": "^4.0.4",
