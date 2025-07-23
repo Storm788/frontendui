@@ -1,3 +1,79 @@
+# Deníček
+- Up to date 24.07.2025 -> 281 comitů
+### Zadání:
+- Zobrazení zkoušky (v termínu u semestru / předmětu)
+- Seznam zkoušených / Podmínky zkoušek 
+- Zápis výsledků (výkonů) souhrnná hodnocení
+
+## **Commit na první projektový den:**
+- Dne 3.4.2025 První vypsaní na stránku -> Hello World!
+
+Odkaz:https://github.com/Storm788/frontendui/commit/f188de23ab880ba3db50ea4f346b472719745144
+
+###### Problémy:
+- Pochopení programu/ujasnění si zadání, vyjasnit si jak postupovat, rozdělení práce ve skupině
+###### Vyřešené problémy:
+- První kroky k pochopení fungování programu, zatím pracujeme spolu na jednom počítači a pomáháme si navzájem
+
+
+
+
+## **Commit na druhý projektový den:**
+- Dne 8.5.2025
+
+Odkaz: https://github.com/Storm788/frontendui/commit/b498c0ed14828a78e1e3f9cd635b2d4b3d6ea1e4
+
+##### Vyřešené problémy
+- Vytvoření prvních mutací
+
+##### Problémy:
+- Nepodařilo se nám to nahrát na git. Žádná data v dadbázi. 
+- Problém s vytvořením DeleteAsyncAction
+
+
+
+
+## **Commit na třetí projektový den:**
+- Dne 28.5.2025 Přidání StudentListu a propojení Exam a Evaluation
+
+Odkaz: https://github.com/Storm788/frontendui/commit/4810045c04bd4939045e5656b6a3c3a2e0ec90f1
+
+##### Vyřešené problémy:
+- zprovoznění seznamu zkoušek
+- dodělání ke každé zkoušce delete, update button/ k tomu dodělání insert buttonu
+- propojení exam a evaluation
+##### Problémy:
+- oprava chyby u insertu, chyba userId(nepovedlo se)
+- udělat ze studentů seznam studentů (navazuje na přidaní studentu do databáze, nejsou žádní studenti takže nelze zobrazit)
+- přiřadit ke každému studentovi možnost ho hodnotit neboli evaluation (navazuje na vytvoření seznamu studentu)
+
+
+
+
+## **Shrnutí průběžných commitů/příprava na zkoušku:**
+##### Problémy mimo projektové dny:
+- Původní struktura kódu začínala být neudržitelná a komplikovala další vývoj.
+- Bylo potřeba vyřešit klíčové funkční otázky: jak zjistit, kteří studenti patří k dané zkoušce, jak je najít a vložit, a jak jim přiřadit možnost hodnocení.
+- Aplikace nebyla připravena na správné fungovaní a její design vyžadoval vylepšení.
+- ExamPage má hromadu nedostatků, špátne fungovaní logiky *(exam.student.evaluation.student.name) = špatně*
+- Potřeba nějak získat studenty přes eval
+- student potřebuje hodnoty, které nevíme jak získat (userId, programId, stateId)
+- závěrečny kód je velmi nepřehledný
+
+##### Vyřešené problémy mimo projektové dny:
+- Vytvořili jsme si novou strukturu pro zobrazování
+    - První je ExamListPage, která je napojena přes link na ExamPage
+- ExamListPage hotova z projektových dnů
+- Vyřešen problém ExamPage pochopení logiky *(exam.evaluation.student.student.name) = správna logika*
+- Vyřešen problém se získáváním stůdentů přes evaluation, tak že jsme si to nastavili na defaultní hodnoty a nasledně je upravovali
+- Student získal své hodnoty, proto s ním můžeme pracovat
+- Proběhl velký úklid kódu, vytvoření dalších komponent a příprava na publikaci.
+- Export nmpjs
+- Vytvořena JSdoc
+
+#### Nevyřešené problémy mimo projektové dny:
+- Nelze nám nahrát grade do dabáze, obešli jsme to pomocí vypočtů a ukládání v kódu
+
 # Změny
 
 ## 3.4.2025
@@ -5,21 +81,3 @@
 - script `createscalar.js`
 - script `createvector.js`
 - template `EmptyVectorsAttribute.jsx`
-
-# Deníček
-
-### Zadání:
-Zobrazení zkoušky (v termínu u semestru / předmětu)/ Seznam zkoušených / Podmínky zkoušek a jejich část/ Zápis výsledků (výkonů) souhrnná hodnocení 
-
-
-### **První commit:**
-Dne 3.4.2025 První vypsaní na stránku -> Hello World!
-##### Problémy:
-Pochopení programu/ujasnění si zadání, vyjasnit si jak postupovat, rozdělení práce ve skupině
-##### Vyřešené problémy:
-První kroky k pochopení fungování programu, zatím pracujeme spolu na jednom počítači a pomáháme si navzájem
-
-### Druhý commit:
-Soon to be! Snad! Update 15.5.2025 se mi podarilo vyresit problem s commitovanim
-#### Problémy:
-Nepodařilo se nám to nahrát na git. Žádná data v dadbázi. Problém s vytvořením DeleteAsyncAction
