@@ -1,6 +1,6 @@
 import { createAsyncGraphQLAction, useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
 import { useState } from "react";
-import {EvaluationForm} from '../../Student/Components/StudentData.jsx';
+import {EvaluationForm} from '../../Exam/Components/StudentEval.jsx';
 
 const QueryStudentAsyncAction = createAsyncGraphQLAction(`query QueryInstructor($pattern: String!) {
   userPage(
@@ -56,7 +56,7 @@ const EvaluationInsertAsyncAction = createAsyncGraphQLAction(`mutation MyMutatio
 }`)
 
 
-const LocalStudent = ({ user, insertStudent, examId }) => {
+const LocalStudent = ({ user, insertStudent, examId, onDone }) => {
   const [showForm, setShowForm] = useState(false);
   const [studentObj, setStudentObj] = useState(null);
 
@@ -69,11 +69,12 @@ const LocalStudent = ({ user, insertStudent, examId }) => {
     console.log(student)
     setStudentObj(student);
     setShowForm(true);
+
   };
   return (
     <div>
       <a onClick={onClick} href="#">{user.fullname}</a>
-      {showForm && <EvaluationForm student={studentObj} minScore={50} maxScore={100} examId={examId} />}
+      {showForm && <EvaluationForm student={studentObj} minScore={50} maxScore={100} examId={examId} onDone={onDone} />}
     </div>
   );
 };
@@ -82,8 +83,6 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
   const [pattern, setPattern] = useState("");
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [points, setPoints] = useState("");
-  const [passed, setPassed] = useState(false);
 
   const { fetch: fetchUsers, loading: loadingUsers } = useAsyncAction(
     QueryStudentAsyncAction,
@@ -98,11 +97,6 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
     { deferred: true }
   );
   
-  const { fetch: insertEvaluation } = useAsyncAction(
-    EvaluationInsertAsyncAction, 
-    {}, 
-    { deferred: true }
-  );
 
   // Vyhledávání uživatelů při změně patternu
   const handlePatternChange = async (e) => {
@@ -120,11 +114,7 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
   const handleUserClick = async (user) => {
     setSelectedUser(user);
     
-    // Use the hook that was declared at the top level
-    const studentResult = await insertStudent({ 
-      userId: user.id, 
-      programId: "0ac1761b-0ec7-4fc2-b4d7-127e79a316eb"
-    });
+    
   };
 
   return (
@@ -144,7 +134,7 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
               className="list-group-item list-group-item-action"
               style={{ cursor: "pointer", padding: 0 }}
             >
-              <LocalStudent user={user} onSelect={handleUserClick} insertStudent={insertStudent} examId={examId}/>
+              <LocalStudent user={user} onSelect={handleUserClick} insertStudent={insertStudent} examId={examId} onDone={onDone} />
             </li>
           ))}
         </ul>

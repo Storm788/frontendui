@@ -89,6 +89,7 @@ const ExamPageContentLazy = ({ exam }) => {
     // Callback to refresh exam data after student is added
     const handleStudentAdded = () => {
         fetch(exam)
+        evalFetch({ where: { exam_id: { _eq: exam.id } }, limit: 100 })
     }
 
     const students = evalsDispatchResult?.data?.result || [];
