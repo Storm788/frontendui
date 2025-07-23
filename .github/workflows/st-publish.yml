@@ -6,7 +6,12 @@ name: publish Node.js Package
 on:
   release:
     types: [created]
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to publish'
+        required: true
+        default: 'monorepo'
 
 jobs:
   publish:
