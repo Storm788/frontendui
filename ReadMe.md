@@ -12,10 +12,15 @@ Zobrazení zkoušky (v termínu u semestru / předmětu)/ Seznam zkoušených / 
 
 ### **Commit na první projektový den:**
 Dne 3.4.2025 První vypsaní na stránku -> Hello World!
+
+Odkaz:https://github.com/Storm788/frontendui/commit/f188de23ab880ba3db50ea4f346b472719745144
+
 ##### Problémy:
 -Pochopení programu/ujasnění si zadání, vyjasnit si jak postupovat, rozdělení práce ve skupině
 ##### Vyřešené problémy:
 První kroky k pochopení fungování programu, zatím pracujeme spolu na jednom počítači a pomáháme si navzájem
+
+
 
 
 ## **Commit na druhý projektový den:**
@@ -26,6 +31,8 @@ Odkaz: https://github.com/Storm788/frontendui/commit/b498c0ed14828a78e1e3f9cd635
 #### Problémy:
 -Nepodařilo se nám to nahrát na git. Žádná data v dadbázi.
 -Problém s vytvořením DeleteAsyncAction
+
+
 
 
 ### **Commit na třetí projektový den:**
@@ -41,6 +48,9 @@ Odkaz: https://github.com/Storm788/frontendui/commit/4810045c04bd4939045e5656b6a
 -oprava chyby u insertu, chyba userId(nepovedlo se)
 -udělat ze studentů seznam studentů (navazuje na přidaní studentu do databáze, nejsou žádní studenti takže nelze zobrazit)
 -přiřadit ke každému studentovi možnost ho hodnotit neboli evaluation (navazuje na vytvoření seznamu studentu)
+
+
+
 
 ### **Shrnutí průběžných commitů:**
 #### Problémy mimo projektové dny:
