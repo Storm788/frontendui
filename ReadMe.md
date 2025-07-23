@@ -16,7 +16,7 @@ Dne 3.4.2025 První vypsaní na stránku -> Hello World!
 Odkaz:https://github.com/Storm788/frontendui/commit/f188de23ab880ba3db50ea4f346b472719745144
 
 ###### Problémy:
--Pochopení programu/ujasnění si zadání, vyjasnit si jak postupovat, rozdělení práce ve skupině
+--Pochopení programu/ujasnění si zadání, vyjasnit si jak postupovat, rozdělení práce ve skupině
 ###### Vyřešené problémy:
 První kroky k pochopení fungování programu, zatím pracujeme spolu na jednom počítači a pomáháme si navzájem
 
