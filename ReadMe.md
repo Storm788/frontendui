@@ -47,7 +47,7 @@ Odkaz: https://github.com/Storm788/frontendui/commit/4810045c04bd4939045e5656b6a
 
 
 
-## **Shrnutí průběžných commitů: Příprava na zkoušku.**
+## **Shrnutí průběžných commitů/příprava na zkoušku:**
 ##### Problémy mimo projektové dny:
 - Původní struktura kódu začínala být neudržitelná a komplikovala další vývoj.
 - Bylo potřeba vyřešit klíčové funkční otázky: jak zjistit, kteří studenti patří k dané zkoušce, jak je najít a vložit, a jak jim přiřadit možnost hodnocení.
