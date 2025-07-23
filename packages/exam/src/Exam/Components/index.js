@@ -6,5 +6,8 @@ export * from './ExamLink'
 export * from './ExamMediumContent'
 export * from './ExamMediumCard'
 export * from './ExamMediumEditableContent'
+
 export * from './ExamData'
 export * from './StudentInsert'
+export * from './StudentEval'
+export * from './LocalStudent'

@@ -1,9 +1,9 @@
-import {EvaluationForm} from '../../Exam/Components/StudentEval.jsx';
+import {EvaluationForm} from '@storm788/pckg';
 import { useState } from 'react';
 
 /**
  * Komponenta LocalStudent umožňuje vložit studenta do zkoušky a následně jej ohodnotit.
- *
+ * 
  * @component
  * @param {Object} props
  * @param {Object} props.user - Objekt uživatele představujícího studenta.
@@ -22,14 +22,13 @@ export const LocalStudent = ({ user, insertStudent, examId, onDone}) => {
       programId: "0ac1761b-0ec7-4fc2-b4d7-127e79a316eb"
     });
     const student = result?.data?.studentInsert;
-    console.log(student)
     setStudentObj(student);
     setShowForm(true);
   };
   return (
     <div>
       <a onClick={onClick} href="#">{user.fullname}</a>
-      {showForm && <EvaluationForm student={studentObj} minScore={50} maxScore={100} examId={examId} onDone={onDone} />}
+      {showForm && <EvaluationForm evaluation={studentObj} minScore={50} maxScore={100} examId={examId} onDone={onDone} />}
     </div>
   );
 };

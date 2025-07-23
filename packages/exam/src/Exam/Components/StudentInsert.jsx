@@ -1,8 +1,6 @@
 import { useState } from "react";
-import{ QueryStudentAsyncAction } from "../../Exam/Queries/InsertAsyncAction.jsx";
-import { InsertStudentAsyncAction } from "../../Exam/Queries/InsertAsyncAction.jsx";
 import { useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
-import { LocalStudent } from "./LocalStudent.jsx";
+import { LocalStudent, InsertStudentAsyncAction, QueryStudentAsyncAction } from "@storm788/pckg";
 
 /**
  * Komponenta StudentEvaluationInsert poskytuje UI pro vyhledávání uživatelů a jejich vložení jako studentů ke zkoušce pro hodnocení.
@@ -14,17 +12,16 @@ import { LocalStudent } from "./LocalStudent.jsx";
  * @param {boolean} props.readOnly - Pokud je true, zakáže možnost vkládání.
  * @returns {JSX.Element|null}
  */
-export const StudentEvaluationInsert = ({ examId, onDone, readOnly }) => {
+export const StudentEvaluationInsert = ({ examId, onDone, readOnly, evaluations }) => {
   const [pattern, setPattern] = useState("");
   const [users, setUsers] = useState([]);
 
-  const { fetch: fetchUsers, loading: loadingUsers } = useAsyncAction(
+  const { fetch: fetchUsers} = useAsyncAction(
     QueryStudentAsyncAction,
     {},
     { deferred: true }
   );
   
-  // Move the hook call to the top level of the component
   const { fetch: insertStudent } = useAsyncAction(
     InsertStudentAsyncAction, 
     {}, 
@@ -32,13 +29,14 @@ export const StudentEvaluationInsert = ({ examId, onDone, readOnly }) => {
   );
   
 
-  // Vyhledávání uživatelů při změně patternu
+  // Vyhledávání uživatelů při změně patternu - musi byt uvnitr fce - vyuziva hooks
   const handlePatternChange = async (e) => {
     const value = e.target.value;
     setPattern(value);
     if (value.length > 0) {
       const result = await fetchUsers({ pattern: `%${value}%` });
       setUsers(result?.data?.userPage);
+
     } else {
       setUsers([]);
     }
@@ -63,7 +61,12 @@ export const StudentEvaluationInsert = ({ examId, onDone, readOnly }) => {
               className="list-group-item list-group-item-action"
               style={{ cursor: "pointer", padding: 0 }}
             >
-              <LocalStudent user={user} insertStudent={insertStudent} examId={examId} onDone={onDone}/>
+
+              {evaluations.some(
+                evaluation => evaluation.student?.student?.fullname === user.fullname
+              ) ? null : (
+                <LocalStudent user={user} insertStudent={insertStudent} examId={examId} onDone={onDone} />
+              )}            
             </li>
           ))}
         </ul>

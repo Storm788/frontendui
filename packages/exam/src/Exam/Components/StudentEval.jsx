@@ -1,6 +1,6 @@
 import { Row, Col, Button, Card, Form, Badge } from "react-bootstrap"
 import { useState } from "react"
-import { EvaluationInsertAsyncAction } from "../../Evaluation/Queries";
+import { EvaluationInsertAsyncAction } from "@storm788/pckg";
 import {useAsyncAction} from "@hrbolek/uoisfrontend-gql-shared";
 
 
@@ -18,7 +18,8 @@ import {useAsyncAction} from "@hrbolek/uoisfrontend-gql-shared";
  *
  * @returns {JSX.Element} Formulář pro zadání a uložení hodnocení studenta.
  */
-export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId, onDone }) => {
+export const EvaluationForm = ({ evaluation, minScore, maxScore, submitting, examId, onDone }) => {
+  console.log(evaluation)
   const { fetch: fetchEvaluationInsert } = useAsyncAction(EvaluationInsertAsyncAction, {}, { deffered: true });
   const [points, setPoints] = useState("");
 
@@ -28,7 +29,7 @@ export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId
       id: crypto.randomUUID(),
       passed: parseInt(points) >= minScore,
       points: parseInt(points),
-      studentId : student.id,
+      studentId : evaluation.id,
       examId: examId,
     };
     const evaluationResult = await fetchEvaluationInsert(EvaluationInsertParams);
@@ -42,7 +43,7 @@ export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId
   return (
     <Card className="mt-2">
       <Card.Header>
-        <h6 className="mb-0">Hodnocení: {student.student.name} {student.student.surname}</h6>
+        <h6 className="mb-0">Hodnocení: {evaluation.student.name} {evaluation.student.surname}</h6>
       </Card.Header>
       <Card.Body>
         <Form>

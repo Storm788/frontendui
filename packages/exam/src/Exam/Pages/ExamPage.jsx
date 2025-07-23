@@ -30,7 +30,7 @@ import { Card, Row, Col} from "react-bootstrap"
  */
 
 
-const ExamPageContent = ({ exam, students, onStudentAdded, readOnly }) => {
+const ExamPageContent = ({ exam, evaluations, onStudentAdded, readOnly }) => {
     return (<>
         <ExamPageNavbar exam={exam} />
         <ExamLargeCard exam={exam}>
@@ -40,7 +40,7 @@ const ExamPageContent = ({ exam, students, onStudentAdded, readOnly }) => {
                     <Card>
                         {/* Tělo karty bez vnitřního odsazení pro lepší vzhled seznamu */}
                         <Card.Body className="p-0">
-                            <StudentList students={students} onStudentAdded={onStudentAdded} exam={exam} readOnly={readOnly} />
+                            <StudentList evaluations={evaluations} onStudentAdded={onStudentAdded} exam={exam} readOnly={readOnly} />
                         </Card.Body>
                     </Card>
                 </Col>
@@ -91,12 +91,17 @@ const ExamPageContentLazy = ({ exam, readOnly }) => {
         evalFetch({ where: { exam_id: { _eq: exam.id } }, limit: 100 })
     }
 
-    const students = evalsDispatchResult?.data?.result || [];
+    const evaluations = evalsDispatchResult?.data?.result || [];
+    evaluations.sort((a, b) => {
+        const surnameA = a.student?.student?.surname?.toLowerCase() || "";
+        const surnameB = b.student?.student?.surname?.toLowerCase() || "";
+        return surnameA.localeCompare(surnameB);
+    });
 
     return (<>
         {loading && <LoadingSpinner />}
         {error && <ErrorHandler errors={error} />}
-        {entity && <ExamPageContent exam={entity} students={students} onStudentAdded={handleStudentAdded} readOnly={readOnly} />}
+        {entity && <ExamPageContent exam={entity} evaluations={evaluations} onStudentAdded={handleStudentAdded} readOnly={readOnly} />}
     </>)
 }
 

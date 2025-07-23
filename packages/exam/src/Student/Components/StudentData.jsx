@@ -1,26 +1,18 @@
 import { ListGroup, Row, Col, Badge } from "react-bootstrap"
-import { StudentEvaluationInsert } from "../../Exam/Components"
 import { useState } from "react"
-import { EvaluationForm } from "../../Exam/Components/StudentEval";
-import { StudentEvaluationDisplay } from "../../Student/Components/StudentEvaluationDisplay";
+import { EvaluationForm, StudentEvaluationDisplay, StudentEvaluationInsert  } from "@storm788/pckg"
 
 /**
  * Komponenta zobrazující seznam studentů s jejich základními údaji a ovládacími prvky
- * @param {Object[]} students - Pole studentů
+ * @param {Object[]} evaluations - Pole studentů
  * @param {Number} minScore - Minimální skóre pro úspěch (např. 80)
  * @param {Number} maxScore - Maximální možné skóre (např. 99) 
  * @param {Function} onStudentAdded - Callback when a student is added
  * @param {Function} onStudentEvaluated - Callback when a student is evaluated
  */
-export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, programId, onStudentAdded, onStudentEvaluated, readOnly }) => {
+export const StudentList = ({ evaluations, minScore = 50, maxScore = 100, exam, programId, onStudentAdded, onStudentEvaluated, readOnly }) => {
     const [evaluatingStudent, setEvaluatingStudent] = useState(null);
     const [submitting, setSubmitting] = useState(false);
-
-  
-    // Zrušení hodnocení
-    const handleCancelEvaluation = () => {
-        setEvaluatingStudent(null);
-    };
 
     // Odeslání hodnocení
     const handleSubmitEvaluation = async (student, evaluationData) => {
@@ -58,40 +50,39 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, pro
                 </Col>
                 <Col className="text-end">
                     {/* Komponenta pro přidání existujícího studenta do zkoušky */}
-                    <StudentEvaluationInsert examId={exam.id} programId={programId} onDone={onStudentAdded} readOnly={readOnly}></StudentEvaluationInsert>
+                    <StudentEvaluationInsert examId={exam.id} programId={programId} onDone={onStudentAdded} readOnly={readOnly} evaluations={evaluations}></StudentEvaluationInsert>
                 </Col>
             </Row>
 
             {/* Seznam studentů bez ohraničení pro lepší vzhled v kartě */}
             <ListGroup variant="flush">
-                {students && students.length > 0 ? (
-                    students.map(student => {
+                {evaluations && evaluations.length > 0 ? (
+                    evaluations.map(evaluation => {
                         return (
-                            <div key={student.id}>
+                            <div key={evaluation.id}>
                                 <ListGroup.Item className="d-flex justify-content-between align-items-center">
                                     {/* Informace o studentovi */}
                                     <div>
                                         {/* Jméno a semestr studenta */}
                                         <div>
-                                            <strong>{student.student.student.name} {student.student.student.surname}</strong>
+                                            <strong>{evaluation.student.student.surname} {evaluation.student.student.name} </strong>
                                           
                                         </div>
                                     </div>
                                     
                                     {/* Hodnocení nebo tlačítko pro hodnocení */}
                                     <div>
-                                            <StudentEvaluationDisplay evaluation={student} onDone={onStudentAdded} readOnly={readOnly}/>
+                                            <StudentEvaluationDisplay evaluation={evaluation} onDone={onStudentAdded} readOnly={readOnly}/>
                                     </div>
                                 </ListGroup.Item>
                                 
                                 {/* Formulář pro hodnocení (zobrazí se pouze pro vybraného studenta) */}
-                                {evaluatingStudent?.id === student.id && (
+                                {evaluatingStudent?.id === evaluation.id && (
                                     <EvaluationForm
-                                        student={student}
+                                        evaluation={evaluation}
                                         minScore={minScore}
                                         maxScore={maxScore}
                                         onSubmit={handleSubmitEvaluation}
-                                        onCancel={handleCancelEvaluation}
                                         submitting={submitting}
                                     />
                                 )}
