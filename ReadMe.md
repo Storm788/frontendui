@@ -1,7 +1,9 @@
 # Deníček
 - Up to date 24.07.2025 -> 281 comitů
 ### Zadání:
-- Zobrazení zkoušky (v termínu u semestru / předmětu)/ Seznam zkoušených / Podmínky zkoušek a Zápis výsledků (výkonů) souhrnná hodnocení
+- Zobrazení zkoušky (v termínu u semestru / předmětu)
+- Seznam zkoušených / Podmínky zkoušek 
+- Zápis výsledků (výkonů) souhrnná hodnocení
 
 ## **Commit na první projektový den:**
 - Dne 3.4.2025 První vypsaní na stránku -> Hello World!
