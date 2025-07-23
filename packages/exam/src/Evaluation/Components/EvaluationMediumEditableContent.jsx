@@ -28,8 +28,8 @@ export const EvaluationMediumEditableContent = ({evaluation, onChange=(e)=>null,
     return (
         <>           
             <Input id={"points"} label={"Body"} className="form-control" defaultValue={evaluation?.points|| "0-100"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"grade"} label={"Známka"} className="form-control" defaultValue={evaluation?.grade|| "A-F"} onChange={onChange} onBlur={onBlur}/>
-            <Input id={"passed"} label={"Výsledek zkoušky"} type="checkbox" className="form-check-input" defaultChecked={evaluation?.passed|| false} onChange={onChange} onBlur={onBlur} />
+            <Input id={"grade"} label={"Známka"} className="form-control" defaultValue={evaluation?.grade|| "A-F"} readOnly/>
+            <Input id={"passed"} label={"Výsledek zkoušky"} type="checkbox" className="form-check-input" defaultChecked={evaluation?.passed|| false} readOnly />
             {children}
         </>
     )

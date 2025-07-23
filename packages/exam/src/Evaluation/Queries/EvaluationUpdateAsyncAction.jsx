@@ -3,19 +3,14 @@ import { EvaluationLargeFragment } from "./EvaluationFragments";
 
 const EvaluationUpdateMutation = createQueryStrLazy(
 `
-mutation EvaluationUpdateMutation($id: UUID!, $lastchange: DateTime!, $name: String, $name_en: String) {
-  result: evaluationUpdate(
-    evaluation: {id: $id, lastchange: $lastchange, name: $name, nameEn: $name_en}
-  ) {
-    ... on EvaluationGQLModelUpdateError {
-      failed
-      msg
-      input
-      Entity {
-        ...EvaluationLarge
-      }      
+mutation evaluationUpdate($id: UUID!, $lastchange: DateTime!, $semesterId: UUID, $userId: UUID, $order: Int, $points: Int, $passed: Boolean, $description: String, $grade: String, $classificationlevelId: UUID, $examId: UUID, $eventId: UUID, $parentId: UUID, $studentId: UUID, $examinerId: UUID) {
+  evaluationUpdate(evaluation: {id: $id, lastchange: $lastchange, semesterId: $semesterId, userId: $userId, order: $order, points: $points, passed: $passed, description: $description, grade: $grade, classificationlevelId: $classificationlevelId, examId: $examId, eventId: $eventId, parentId: $parentId, studentId: $studentId, examinerId: $examinerId}) {
+    ... on EvaluationGQLModel { 
+      ...EvaluationLarge
     }
-    ...EvaluationLarge
+    ... on EvaluationGQLModelUpdateError { 
+    	msg
+    }
   }
 }
 `, EvaluationLargeFragment)

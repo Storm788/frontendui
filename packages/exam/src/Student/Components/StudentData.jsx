@@ -2,18 +2,33 @@ import { ListGroup, Row, Col, Button, Card, Form, Badge } from "react-bootstrap"
 import { StudentEvaluationInsert } from "../../Exam/Components"
 import { useState } from "react"
 import { EvaluationForm } from "../../Exam/Components/StudentEval";
+import { EvaluationDeleteButton } from "../../Evaluation/Components/EvaluationDeleteButton";
+import { EvaluationButton } from "../../Evaluation/Components";
 
 
 // Komponenta pro zobrazení existujícího hodnocení
-const StudentEvaluationDisplay = ({ evaluation }) => {
-  return (
+const StudentEvaluationDisplay = ({ evaluation, onDone }) => {
+    evaluation.passed = evaluation.points >= 50;
+    if (evaluation.points < 50) evaluation.grade = "F";
+    else if (evaluation.points < 60) evaluation.grade = "E";
+    else if (evaluation.points < 70) evaluation.grade = "D";
+    else if (evaluation.points < 80) evaluation.grade = "C";
+    else if (evaluation.points < 90) evaluation.grade = "B";
+    else evaluation.grade = "A";
+    return (
     <div className="d-flex align-items-center gap-2">
-      <Badge bg={evaluation.passed ? "success" : "danger"}>
+        <Badge bg={evaluation.passed ? "success" : "danger"}>
         {evaluation.points} bodů
-      </Badge>
-      <small className="text-muted">
-        {evaluation.passed ? "Prošel" : "Neprošel"}
-      </small>
+        </Badge>
+        <small>
+            {evaluation.grade === 'E' ? "sotva" : evaluation.grade}
+        </small>
+        <small className="text-muted">
+            {evaluation.passed ? "Prošel" : "Neprošel"}
+        </small>
+        {/* <EvaluationDeleteButton evaluationId={evaluation.id} lastchange={evaluation.lastchange} onDone={onDone}/> */}
+        <EvaluationButton operation="D" evaluation={evaluation} onDone={onDone}>Smazat</EvaluationButton>
+        <EvaluationButton operation="U" evaluation={evaluation} onDone={onDone}>Upravit</EvaluationButton>
     </div>
   );
 };
@@ -92,17 +107,13 @@ export const StudentList = ({ students, minScore = 50, maxScore = 100, exam, pro
                                         {/* Jméno a semestr studenta */}
                                         <div>
                                             <strong>{student.student.student.name} {student.student.student.surname}</strong>
-                                            <small className="text-muted ms-2">
-                                                {student.student.semesterNumber && (
-                                                    <span>(Semestr: {student.student.student.semesterNumber})</span>
-                                                )}
-                                            </small>
+                                          
                                         </div>
                                     </div>
                                     
                                     {/* Hodnocení nebo tlačítko pro hodnocení */}
                                     <div>
-                                            <StudentEvaluationDisplay evaluation={student} />
+                                            <StudentEvaluationDisplay evaluation={student} onDone={onStudentAdded}/>
                                     </div>
                                 </ListGroup.Item>
                                 

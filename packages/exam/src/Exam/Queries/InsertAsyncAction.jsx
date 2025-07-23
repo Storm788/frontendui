@@ -44,6 +44,7 @@ const EvaluationInsertAsyncAction = createAsyncGraphQLAction(`mutation MyMutatio
     __typename
     ... on EvaluationGQLModel {
       id
+      lastchange
     }
     ... on InsertError {
       input
