@@ -67,7 +67,7 @@ Odkaz: https://github.com/Storm788/frontendui/commit/4810045c04bd4939045e5656b6a
 - Student získal své hodnoty, proto s ním můžeme pracovat
 - Proběhl velký úklid kódu, vytvoření dalších komponent a příprava na publikaci.
 - Export nmpjs
-- Vytvořena NPMdoc
+- Vytvořena JSdoc
 
 #### Nevyřešené problémy mimo projektové dny:
 - Nelze nám nahrát grade do dabáze, obešli jsme to pomocí vypočtů a ukládání v kódu
