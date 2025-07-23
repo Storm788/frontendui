@@ -1,61 +1,9 @@
-import { createAsyncGraphQLAction, useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
 import { useState } from "react";
 import {EvaluationForm} from '../../Exam/Components/StudentEval.jsx';
+import{ QueryStudentAsyncAction } from "../../Exam/Queries/InsertAsyncAction.jsx";
+import { InsertStudentAsyncAction } from "../../Exam/Queries/InsertAsyncAction.jsx";
 
-const QueryStudentAsyncAction = createAsyncGraphQLAction(`query QueryInstructor($pattern: String!) {
-  userPage(
-    where: {
-      _or: [
-        { name: { _ilike: $pattern } },
-        { surname: { _ilike: $pattern } }
-      ]
-    }
-    limit: 100
-  ) {
-    __typename
-    id
-    name
-    surname
-    fullname
-    studies {
-      id
-    }
-  }
-}`)
-
-const InsertStudentAsyncAction = createAsyncGraphQLAction(`mutation InsertStudent($userId: UUID!, $programId: UUID!) {
-  studentInsert(student: {programId: $programId, userId: $userId, stateId: "51d101a0-81f1-44ca-8366-6cf51432e8d6"}) {
-  __typename
-    ... on StudentGQLModel {
-      id
-      student {
-        __typename
-        id
-        name
-        surname
-        fullname
-      }
-    }
-  }
-}`)
-
-const EvaluationInsertAsyncAction = createAsyncGraphQLAction(`mutation MyMutation($studentId: UUID!, $examId: UUID!, $passed: Boolean!, $points: Int!, $id: UUID) {
-  evaluationInsert(
-    evaluation: {studentId: $studentId, passed: $passed, points: $points, examId: $examId, id: $id}
-  ) {
-    __typename
-    ... on EvaluationGQLModel {
-      id
-    }
-    ... on InsertError {
-      input
-      failed
-      msg
-    }
-  }
-}`)
-
-
+// Komponenta pro zobrazení studenta
 const LocalStudent = ({ user, insertStudent, examId, onDone }) => {
   const [showForm, setShowForm] = useState(false);
   const [studentObj, setStudentObj] = useState(null);
