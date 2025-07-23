@@ -35,7 +35,6 @@ export const ExamMediumContent = ({exam, children}) => {
 }
 */
 export const ExamMediumContent = ({exam, children}) => {
-    console.log("ExamMediumContent", exam)
     return (
         <>
             ID:({exam.id}) <br/>

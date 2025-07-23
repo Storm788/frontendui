@@ -92,7 +92,6 @@ const ExamPageContentLazy = ({ exam }) => {
     }
 
     const students = evalsDispatchResult?.data?.result || [];
-    console.log("ExamPageContentLazy.students", students)
 
     return (<>
         {loading && <LoadingSpinner />}

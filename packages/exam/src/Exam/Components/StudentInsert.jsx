@@ -1,5 +1,6 @@
 import { createAsyncGraphQLAction, useAsyncAction } from "@hrbolek/uoisfrontend-gql-shared";
 import { useState } from "react";
+import {EvaluationForm} from '../../Student/Components/StudentData.jsx';
 
 const QueryStudentAsyncAction = createAsyncGraphQLAction(`query QueryInstructor($pattern: String!) {
   userPage(
@@ -27,6 +28,13 @@ const InsertStudentAsyncAction = createAsyncGraphQLAction(`mutation InsertStuden
   __typename
     ... on StudentGQLModel {
       id
+      student {
+        __typename
+        id
+        name
+        surname
+        fullname
+      }
     }
   }
 }`)
@@ -47,18 +55,28 @@ const EvaluationInsertAsyncAction = createAsyncGraphQLAction(`mutation MyMutatio
   }
 }`)
 
-const LocalStudent = ({ user, onSelect }) => {
-    const onClick = (e) => {
-        e.preventDefault();
-        console.log("LocalStudent.onClick", user.id, user.name)
-        onSelect(user)
-    }
-    return (
-        <div>
-            <a onClick={onClick} href="#">{user.fullname}</a>
-        </div>
-    )
-}
+
+const LocalStudent = ({ user, insertStudent, examId }) => {
+  const [showForm, setShowForm] = useState(false);
+  const [studentObj, setStudentObj] = useState(null);
+
+  const onClick = async () => {
+    const result = await insertStudent({
+      userId: user.id,
+      programId: "0ac1761b-0ec7-4fc2-b4d7-127e79a316eb"
+    });
+    const student = result?.data?.studentInsert;
+    console.log(student)
+    setStudentObj(student);
+    setShowForm(true);
+  };
+  return (
+    <div>
+      <a onClick={onClick} href="#">{user.fullname}</a>
+      {showForm && <EvaluationForm student={studentObj} minScore={50} maxScore={100} examId={examId} />}
+    </div>
+  );
+};
 
 export const StudentEvaluationInsert = ({ examId, onDone }) => {
   const [pattern, setPattern] = useState("");
@@ -107,37 +125,6 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
       userId: user.id, 
       programId: "0ac1761b-0ec7-4fc2-b4d7-127e79a316eb"
     });
-
-    try {
-      const student = studentResult?.data?.studentInsert;
-      if (student?.id) {
-        const evaluationResult = await insertEvaluation({
-          studentId: student.id,
-          examId,
-          passed: false,
-          points: 0,
-        });
-        console.log("Výsledek insertEvaluation:", evaluationResult);
-        
-        const evaluation = evaluationResult?.data?.evaluationInsert;
-        if (evaluation?.id) {
-          //alert("Evaluation úspěšně vytvořena!");
-          onDone?.(evaluation);
-          setPattern("");
-          setSelectedUser(null);
-          setPoints("");
-          setPassed(false);
-          setUsers([]);
-        } else {
-          alert("Nepodařilo se vytvořit evaluation.");
-        }
-      } else {
-        alert("Nepodařilo se vytvořit studenta.");
-      }
-    } catch (err) {
-      console.error("Chyba při vkládání:", err);
-      alert("Chyba při vkládání.");
-    }
   };
 
   return (
@@ -157,7 +144,7 @@ export const StudentEvaluationInsert = ({ examId, onDone }) => {
               className="list-group-item list-group-item-action"
               style={{ cursor: "pointer", padding: 0 }}
             >
-              <LocalStudent user={user} onSelect={handleUserClick} />
+              <LocalStudent user={user} onSelect={handleUserClick} insertStudent={insertStudent} examId={examId}/>
             </li>
           ))}
         </ul>

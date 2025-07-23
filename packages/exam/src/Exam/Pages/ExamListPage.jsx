@@ -29,7 +29,7 @@ import { Search } from "react-bootstrap-icons"
  * 
  * <ExamPageContent exam={examEntity} />
  */
-
+// A loading component for displaying content of an exam entity.
 const ExamListPageContent = ({ exams, onSearch }) => {
     const [searchTerm, setSearchTerm] = useState("")
 

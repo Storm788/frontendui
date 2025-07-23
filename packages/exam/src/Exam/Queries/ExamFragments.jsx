@@ -25,7 +25,7 @@ fragment ExamLarge on ExamGQLModel {
   name
   maxScore
   minScore
-  evaluations {
+  evaluations(limit: 100) {
     id
     lastchange
     points

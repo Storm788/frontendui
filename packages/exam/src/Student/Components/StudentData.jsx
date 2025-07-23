@@ -5,10 +5,8 @@ import { EvaluationInsertAsyncAction } from "../../Evaluation/Queries";
 import {useAsyncAction} from "@hrbolek/uoisfrontend-gql-shared";
 
 
-
-
 // Komponenta pro hodnocení studenta
-const EvaluationForm = ({ student, minScore, maxScore, onSubmit, submitting }) => {
+export const EvaluationForm = ({ student, minScore, maxScore, submitting, examId }) => {
   const { fetch: fetchEvaluationInsert } = useAsyncAction(EvaluationInsertAsyncAction, {}, { deffered: true });
   const [points, setPoints] = useState("");
 
@@ -16,7 +14,6 @@ const EvaluationForm = ({ student, minScore, maxScore, onSubmit, submitting }) =
     e.preventDefault();
     const pointsNumber = parseInt(points) || 0;
     const passed = pointsNumber >= minScore; // Automatický výpočet
-    onSubmit(student, { points: pointsNumber, passed });
   };
 
   const onClick = async (e) => {
@@ -25,10 +22,9 @@ const EvaluationForm = ({ student, minScore, maxScore, onSubmit, submitting }) =
       passed: parseInt(points) >= minScore,
       points: parseInt(points),
       studentId : student.id,
-      examId: student.examId,
+      examId: examId,
     };
     const evaluationResult = await fetchEvaluationInsert(EvaluationInsertParams);
-    console.log(evaluationResult);
   };
 
   const onCancel = (e) => {

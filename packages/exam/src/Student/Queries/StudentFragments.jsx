@@ -10,6 +10,13 @@ fragment StudentLink on StudentGQLModel {
   programId
   stateId
   userId
+  student {
+    __typename
+    id
+    name
+    surname
+    fullname
+  }
 }
 `)
 
