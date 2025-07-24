@@ -1,5 +1,6 @@
 # Deníček
 - Up to date 24.07.2025 -> 281 comitů
+# 120/120!!!
 ### Zadání:
 - Zobrazení zkoušky (v termínu u semestru / předmětu)
 - Seznam zkoušených / Podmínky zkoušek 
