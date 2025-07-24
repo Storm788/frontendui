@@ -27,7 +27,6 @@ export const ExamMediumEditableContent = ({exam, onChange=(e)=>null, onBlur=(e)=
     return (
         <>           
             <Input id={"name"} label={"Název"} className="form-control" defaultValue={exam?.name|| "Polni beh"} onChange={onChange} onBlur={onBlur} />
-            <Input id={"name_en"} label={"Anglický název"} className="form-control" defaultValue={exam?.name_en|| "Field run"} onChange={onChange} onBlur={onBlur}/>
             <Input id={"minScore"} label={"Minimální skóre"} className="form-control" defaultValue={exam?.minScore || 50} onChange={onChange} onBlur={onBlur} type="number" />
             <Input id={"maxScore"} label={"Maximální skóre"} className="form-control" defaultValue={exam?.maxScore || 100} onChange={onChange} onBlur={onBlur} type="number" />
             {children}
